@@ -1,156 +1,640 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
+  <title>Ultra Modern SaaS Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home</title>
-  <link rel="stylesheet" href="../adminPanel.github.io/css/style.css">
-  <script type="text/javascript" src="../adminPanel.github.io/css/style.css" defer></script>
+
+  <link rel="stylesheet" href="css/style.css">
+  <!-- <link rel="stylesheet" href="css/dashboard.css">
+  <script type="text/javascript" src="js/dashboard.js" defer></script> -->
+  <script type="text/javascript" src="js/app.js" defer></script>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- FullCalendar -->
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+
+  <style>
+    /* ================= ROOT ================= */
+    :root {
+      --bg: #020617;
+      --card: rgba(255, 255, 255, 0.08);
+      --border: rgba(255, 255, 255, 0.15);
+      --text: #e5e7eb;
+    }
+
+    .light {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --border: #e5e7eb;
+      --text: #020617;
+    }
+
+    /* ================= BASE ================= */
+    body {
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(circle at top, #1e293b, var(--bg));
+      color: var(--text);
+      transition: .4s;
+      overflow-x: hidden;
+    }
+
+    /* ================= HEADER ================= */
+    .top-bar {
+      background: var(--card);
+      backdrop-filter: blur(16px);
+      padding: 16px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .toggle-btn {
+      cursor: pointer;
+    }
+
+    /* ================= STAT CARD ================= */
+    .stat-card {
+      height: 210px;
+      background: var(--card);
+      backdrop-filter: blur(18px);
+      border-radius: 24px;
+      padding: 22px;
+      display: flex;
+      gap: 18px;
+      border: 1px solid var(--border);
+      box-shadow: 0 30px 80px rgba(0, 0, 0, .6);
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .stat-card::after {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, var(--glow), transparent 70%);
+      top: var(--y);
+      left: var(--x);
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      pointer-events: none;
+      transition: .2s;
+    }
+
+    .stat-card:hover::after {
+      opacity: 1;
+    }
+
+    .stat-icon {
+      /* width: 60px; */
+      padding: 0px 15px;
+      height: 60px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      color: #fff;
+    }
+
+    .stat-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
+
+    .stat-number {
+      font-size: 30px;
+      font-weight: 700;
+    }
+
+    /* ================= REPORT BUTTONS ================= */
+    .stat-actions {
+      display: flex;
+      gap: 20px;
+      transform: translateY(20px);
+      opacity: 0;
+      transition: .5s ease;
+      position: relative;
+      right: 62px;
+    }
+
+    .stat-content p {
+      font-size: 14px;
+    }
+
+    .stat-card:hover .stat-actions {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .report-btn {
+      position: relative;
+      font-size: 12px;
+      padding: 7px 14px;
+      border-radius: 22px;
+      text-decoration: none;
+      overflow: hidden;
+      transition: .3s;
+    }
+
+    /* B2C */
+    .report-btn.b2c {
+      color: #38bdf8;
+      background: rgba(56, 189, 248, .15);
+    }
+
+    .report-btn.b2c:hover {
+      background: #38bdf8;
+      color: #020617;
+      box-shadow: 0 0 20px rgba(56, 189, 248, .8);
+      transform: translateY(-2px) scale(1.05);
+    }
+
+    /* AGENT */
+    .report-btn.agent {
+      color: #c084fc;
+      background: rgba(192, 132, 252, .15);
+    }
+
+    .report-btn.agent:hover {
+      background: #c084fc;
+      color: #020617;
+      box-shadow: 0 0 20px rgba(192, 132, 252, .8);
+      transform: translateY(-2px) scale(1.05);
+    }
+
+    /* ================= DASHBOARD CARDS ================= */
+    .dashboard-card {
+      background: var(--card);
+      backdrop-filter: blur(18px);
+      border-radius: 24px;
+      padding: 26px;
+      border: 1px solid var(--border);
+      box-shadow: 0 30px 80px rgba(0, 0, 0, .6);
+    }
+
+    /* ===== MAIN CONTENT SPACING FIX ===== */
+    .main-content {
+      padding-left: 32px;
+      padding-right: 32px;
+      padding-top: 24px;
+    }
+
+    /* Large screens need MORE breathing room */
+    @media (min-width: 1400px) {
+      .main-content {
+        padding-left: 48px;
+        padding-right: 48px;
+      }
+    }
+  </style>
 </head>
+
 <body>
   <nav id="sidebar">
     <ul>
       <li>
         <span class="logo">Mr. Admin</span>
         <button onclick=toggleSidebar() id="toggle-btn">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="m313-480 155 156q11 11 11.5 27.5T468-268q-11 11-28 11t-28-11L228-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l184-184q11-11 27.5-11.5T468-692q11 11 11 28t-11 28L313-480Zm264 0 155 156q11 11 11.5 27.5T732-268q-11 11-28 11t-28-11L492-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l184-184q11-11 27.5-11.5T732-692q11 11 11 28t-11 28L577-480Z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+            <path
+              d="m313-480 155 156q11 11 11.5 27.5T468-268q-11 11-28 11t-28-11L228-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l184-184q11-11 27.5-11.5T468-692q11 11 11 28t-11 28L313-480Zm264 0 155 156q11 11 11.5 27.5T732-268q-11 11-28 11t-28-11L492-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l184-184q11-11 27.5-11.5T732-692q11 11 11 28t-11 28L577-480Z" />
+          </svg>
         </button>
       </li>
       <li>
         <a href="index.html">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M240-200h120v-200q0-17 11.5-28.5T400-440h160q17 0 28.5 11.5T600-400v200h120v-360L480-740 240-560v360Zm-80 0v-360q0-19 8.5-36t23.5-28l240-180q21-16 48-16t48 16l240 180q15 11 23.5 28t8.5 36v360q0 33-23.5 56.5T720-120H560q-17 0-28.5-11.5T520-160v-200h-80v200q0 17-11.5 28.5T400-120H240q-33 0-56.5-23.5T160-200Zm320-270Z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+            <path
+              d="M240-200h120v-200q0-17 11.5-28.5T400-440h160q17 0 28.5 11.5T600-400v200h120v-360L480-740 240-560v360Zm-80 0v-360q0-19 8.5-36t23.5-28l240-180q21-16 48-16t48 16l240 180q15 11 23.5 28t8.5 36v360q0 33-23.5 56.5T720-120H560q-17 0-28.5-11.5T520-160v-200h-80v200q0 17-11.5 28.5T400-120H240q-33 0-56.5-23.5T160-200Zm320-270Z" />
+          </svg>
           <span>Home</span>
         </a>
       </li>
       <li>
         <a href="dashboard.html">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M520-640v-160q0-17 11.5-28.5T560-840h240q17 0 28.5 11.5T840-800v160q0 17-11.5 28.5T800-600H560q-17 0-28.5-11.5T520-640ZM120-480v-320q0-17 11.5-28.5T160-840h240q17 0 28.5 11.5T440-800v320q0 17-11.5 28.5T400-440H160q-17 0-28.5-11.5T120-480Zm400 320v-320q0-17 11.5-28.5T560-520h240q17 0 28.5 11.5T840-480v320q0 17-11.5 28.5T800-120H560q-17 0-28.5-11.5T520-160Zm-400 0v-160q0-17 11.5-28.5T160-360h240q17 0 28.5 11.5T440-320v160q0 17-11.5 28.5T400-120H160q-17 0-28.5-11.5T120-160Zm80-360h160v-240H200v240Zm400 320h160v-240H600v240Zm0-480h160v-80H600v80ZM200-200h160v-80H200v80Zm160-320Zm240-160Zm0 240ZM360-280Z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+            <path
+              d="M520-640v-160q0-17 11.5-28.5T560-840h240q17 0 28.5 11.5T840-800v160q0 17-11.5 28.5T800-600H560q-17 0-28.5-11.5T520-640ZM120-480v-320q0-17 11.5-28.5T160-840h240q17 0 28.5 11.5T440-800v320q0 17-11.5 28.5T400-440H160q-17 0-28.5-11.5T120-480Zm400 320v-320q0-17 11.5-28.5T560-520h240q17 0 28.5 11.5T840-480v320q0 17-11.5 28.5T800-120H560q-17 0-28.5-11.5T520-160Zm-400 0v-160q0-17 11.5-28.5T160-360h240q17 0 28.5 11.5T440-320v160q0 17-11.5 28.5T400-120H160q-17 0-28.5-11.5T120-160Zm80-360h160v-240H200v240Zm400 320h160v-240H600v240Zm0-480h160v-80H600v80ZM200-200h160v-80H200v80Zm160-320Zm240-160Zm0 240ZM360-280Z" />
+          </svg>
           <span>Dashboard</span>
         </a>
       </li>
       <li>
         <button onclick=toggleSubMenu(this) class="dropdown-btn">
-         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M520-640v-160q0-17 11.5-28.5T560-840h240q17 0 28.5 11.5T840-800v160q0 17-11.5 28.5T800-600H560q-17 0-28.5-11.5T520-640ZM120-480v-320q0-17 11.5-28.5T160-840h240q17 0 28.5 11.5T440-800v320q0 17-11.5 28.5T400-440H160q-17 0-28.5-11.5T120-480Zm400 320v-320q0-17 11.5-28.5T560-520h240q17 0 28.5 11.5T840-480v320q0 17-11.5 28.5T800-120H560q-17 0-28.5-11.5T520-160Zm-400 0v-160q0-17 11.5-28.5T160-360h240q17 0 28.5 11.5T440-320v160q0 17-11.5 28.5T400-120H160q-17 0-28.5-11.5T120-160Zm80-360h160v-240H200v240Zm400 320h160v-240H600v240Zm0-480h160v-80H600v80ZM200-200h160v-80H200v80Zm160-320Zm240-160Zm0 240ZM360-280Z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+            <path
+              d="M520-640v-160q0-17 11.5-28.5T560-840h240q17 0 28.5 11.5T840-800v160q0 17-11.5 28.5T800-600H560q-17 0-28.5-11.5T520-640ZM120-480v-320q0-17 11.5-28.5T160-840h240q17 0 28.5 11.5T440-800v320q0 17-11.5 28.5T400-440H160q-17 0-28.5-11.5T120-480Zm400 320v-320q0-17 11.5-28.5T560-520h240q17 0 28.5 11.5T840-480v320q0 17-11.5 28.5T800-120H560q-17 0-28.5-11.5T520-160Zm-400 0v-160q0-17 11.5-28.5T160-360h240q17 0 28.5 11.5T440-320v160q0 17-11.5 28.5T400-120H160q-17 0-28.5-11.5T120-160Zm80-360h160v-240H200v240Zm400 320h160v-240H600v240Zm0-480h160v-80H600v80ZM200-200h160v-80H200v80Zm160-320Zm240-160Zm0 240ZM360-280Z" />
+          </svg>
           <span>Dashboard 2</span>
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M480-361q-8 0-15-2.5t-13-8.5L268-556q-11-11-11-28t11-28q11-11 28-11t28 11l156 156 156-156q11-11 28-11t28 11q11 11 11 28t-11 28L508-372q-6 6-13 8.5t-15 2.5Z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+            <path
+              d="M480-361q-8 0-15-2.5t-13-8.5L268-556q-11-11-11-28t11-28q11-11 28-11t28 11l156 156 156-156q11-11 28-11t28 11q11 11 11 28t-11 28L508-372q-6 6-13 8.5t-15 2.5Z" />
+          </svg>
         </button>
         <ul class="sub-menu">
           <div>
-            <li><a href="#">Folder</a></li>
-            <li><a href="#">Document</a></li>
-            <li><a href="#">Project</a></li>
+            <li>
+
+              <a href="#">
+                <img src="icons/New folder/search-left-1504.svg" class="icon-img" alt="">
+                Search History</a>
+            </li>
+            <li><a href="#"><img class="icon-img " src="icons/New folder/destination-point.svg" alt="">Top
+                Destinations</a></li>
           </div>
         </ul>
       </li>
       <li>
         <button onclick=toggleSubMenu(this) class="dropdown-btn">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="m221-313 142-142q12-12 28-11.5t28 12.5q11 12 11 28t-11 28L250-228q-12 12-28 12t-28-12l-86-86q-11-11-11-28t11-28q11-11 28-11t28 11l57 57Zm0-320 142-142q12-12 28-11.5t28 12.5q11 12 11 28t-11 28L250-548q-12 12-28 12t-28-12l-86-86q-11-11-11-28t11-28q11-11 28-11t28 11l57 57Zm339 353q-17 0-28.5-11.5T520-320q0-17 11.5-28.5T560-360h280q17 0 28.5 11.5T880-320q0 17-11.5 28.5T840-280H560Zm0-320q-17 0-28.5-11.5T520-640q0-17 11.5-28.5T560-680h280q17 0 28.5 11.5T880-640q0 17-11.5 28.5T840-600H560Z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#e8eaed">
+            <path
+              d="M5 21C5 17.134 8.13401 14 12 14C15.866 14 19 17.134 19 21M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" />
+          </svg>
+          <span>User</span>
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+            <path
+              d="M480-361q-8 0-15-2.5t-13-8.5L268-556q-11-11-11-28t11-28q11-11 28-11t28 11l156 156 156-156q11-11 28-11t28 11q11 11 11 28t-11 28L508-372q-6 6-13 8.5t-15 2.5Z" />
+          </svg>
+        </button>
+        <ul class="sub-menu">
+          <div>
+            <li><a href="#"><img class="icon-img" src="icons/New folder/dry-clean.png" alt="">B2B</a></li>
+            <li><a href="#"><img class="icon-img" src="icons/New folder/dry-clean.png" alt="">B2C</a></li>
+          </div>
+        </ul>
+      </li>
+      <li>
+        <button onclick=toggleSubMenu(this) class="dropdown-btn">
+          <img class="icon-img" src="icons/New folder/chart-waterfall.svg" alt="">
           <span>Report</span>
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M480-361q-8 0-15-2.5t-13-8.5L268-556q-11-11-11-28t11-28q11-11 28-11t28 11l156 156 156-156q11-11 28-11t28 11q11 11 11 28t-11 28L508-372q-6 6-13 8.5t-15 2.5Z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+            <path
+              d="M480-361q-8 0-15-2.5t-13-8.5L268-556q-11-11-11-28t11-28q11-11 28-11t28 11l156 156 156-156q11-11 28-11t28 11q11 11 11 28t-11 28L508-372q-6 6-13 8.5t-15 2.5Z" />
+          </svg>
         </button>
         <ul class="sub-menu">
           <div>
-            <li><a href="#">B2B</a></li>
-            <li><a href="#">B2C</a></li>
-            <li><a href="#">Transaction Logs</a></li>
+            <li><a href="#"><img class="icon-img" src="icons/New folder/dry-clean.png" alt="">B2B</a></li>
+            <li><a href="#"><img class="icon-img" src="icons/New folder/dry-clean.png" alt="">B2C</a></li>
+            <li><a href="#"><img class="icon-img" src="icons/New folder/money-transfer.png" alt="">Transaction Logs</a>
+            </li>
           </div>
         </ul>
       </li>
-     
+
       <li>
         <button onclick=toggleSubMenu(this) class="dropdown-btn">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="m221-313 142-142q12-12 28-11.5t28 12.5q11 12 11 28t-11 28L250-228q-12 12-28 12t-28-12l-86-86q-11-11-11-28t11-28q11-11 28-11t28 11l57 57Zm0-320 142-142q12-12 28-11.5t28 12.5q11 12 11 28t-11 28L250-548q-12 12-28 12t-28-12l-86-86q-11-11-11-28t11-28q11-11 28-11t28 11l57 57Zm339 353q-17 0-28.5-11.5T520-320q0-17 11.5-28.5T560-360h280q17 0 28.5 11.5T880-320q0 17-11.5 28.5T840-280H560Zm0-320q-17 0-28.5-11.5T520-640q0-17 11.5-28.5T560-680h280q17 0 28.5 11.5T880-640q0 17-11.5 28.5T840-600H560Z"/></svg>
+          <img class="icon-img" src="icons/New folder/plus-square (1).svg" alt="">
           <span>Package Manage</span>
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M480-361q-8 0-15-2.5t-13-8.5L268-556q-11-11-11-28t11-28q11-11 28-11t28 11l156 156 156-156q11-11 28-11t28 11q11 11 11 28t-11 28L508-372q-6 6-13 8.5t-15 2.5Z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+            <path
+              d="M480-361q-8 0-15-2.5t-13-8.5L268-556q-11-11-11-28t11-28q11-11 28-11t28 11l156 156 156-156q11-11 28-11t28 11q11 11 11 28t-11 28L508-372q-6 6-13 8.5t-15 2.5Z" />
+          </svg>
         </button>
         <ul class="sub-menu">
           <div>
-            <li><a href="#">View Package Type</a></li>
-            <li><a href="#">Add New Package</a></li>
-            <li><a href="#">View Package</a></li>
-            <li><a href="#">View Package Enquires</a></li>
+            <li><a href="#"><img class="icon-img" src="icons/New folder/dry-clean.png" alt="">View Package
+                Type</a></li>
+            <li><a href="#"><img class="icon-img" src="icons/New folder/add-package.png" alt="">Add New
+                Package</a></li>
+            <li><a href="#"><img class="icon-img" src="icons/New folder/dry-clean.png" alt="">View
+                Package</a></li>
+            <li><a href="#"><img class="icon-img" src="icons/New folder/counter.png" alt="">View Package
+                Enquires</a>
+            </li>
           </div>
         </ul>
       </li>
       <li>
         <button onclick=toggleSubMenu(this) class="dropdown-btn">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="m221-313 142-142q12-12 28-11.5t28 12.5q11 12 11 28t-11 28L250-228q-12 12-28 12t-28-12l-86-86q-11-11-11-28t11-28q11-11 28-11t28 11l57 57Zm0-320 142-142q12-12 28-11.5t28 12.5q11 12 11 28t-11 28L250-548q-12 12-28 12t-28-12l-86-86q-11-11-11-28t11-28q11-11 28-11t28 11l57 57Zm339 353q-17 0-28.5-11.5T520-320q0-17 11.5-28.5T560-360h280q17 0 28.5 11.5T880-320q0 17-11.5 28.5T840-280H560Zm0-320q-17 0-28.5-11.5T520-640q0-17 11.5-28.5T560-680h280q17 0 28.5 11.5T880-640q0 17-11.5 28.5T840-600H560Z"/></svg>
+          <img class="icon-img" src="icons/New folder/mail.svg" alt="">
           <span>Email Subscription</span>
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M480-361q-8 0-15-2.5t-13-8.5L268-556q-11-11-11-28t11-28q11-11 28-11t28 11l156 156 156-156q11-11 28-11t28 11q11 11 11 28t-11 28L508-372q-6 6-13 8.5t-15 2.5Z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+            <path
+              d="M480-361q-8 0-15-2.5t-13-8.5L268-556q-11-11-11-28t11-28q11-11 28-11t28 11l156 156 156-156q11-11 28-11t28 11q11 11 11 28t-11 28L508-372q-6 6-13 8.5t-15 2.5Z" />
+          </svg>
         </button>
         <ul class="sub-menu">
           <div>
-            <li><a href="#">View Emails</a></li>
+            <li><a href="#"><img class="icon-img" src="icons/New folder/view.png" alt="">View Emails</a>
+            </li>
           </div>
         </ul>
       </li>
       <li>
         <button onclick=toggleSubMenu(this) class="dropdown-btn">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="m221-313 142-142q12-12 28-11.5t28 12.5q11 12 11 28t-11 28L250-228q-12 12-28 12t-28-12l-86-86q-11-11-11-28t11-28q11-11 28-11t28 11l57 57Zm0-320 142-142q12-12 28-11.5t28 12.5q11 12 11 28t-11 28L250-548q-12 12-28 12t-28-12l-86-86q-11-11-11-28t11-28q11-11 28-11t28 11l57 57Zm339 353q-17 0-28.5-11.5T520-320q0-17 11.5-28.5T560-360h280q17 0 28.5 11.5T880-320q0 17-11.5 28.5T840-280H560Zm0-320q-17 0-28.5-11.5T520-640q0-17 11.5-28.5T560-680h280q17 0 28.5 11.5T880-640q0 17-11.5 28.5T840-600H560Z"/></svg>
+          <img class="icon-img" src="icons/New folder/computer-monitor.svg" alt="">
           <span>CMS</span>
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M480-361q-8 0-15-2.5t-13-8.5L268-556q-11-11-11-28t11-28q11-11 28-11t28 11l156 156 156-156q11-11 28-11t28 11q11 11 11 28t-11 28L508-372q-6 6-13 8.5t-15 2.5Z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+            <path
+              d="M480-361q-8 0-15-2.5t-13-8.5L268-556q-11-11-11-28t11-28q11-11 28-11t28 11l156 156 156-156q11-11 28-11t28 11q11 11 11 28t-11 28L508-372q-6 6-13 8.5t-15 2.5Z" />
+          </svg>
         </button>
         <ul class="sub-menu">
           <div>
-            <li><a href="#">Home Page Banner Image</a></li>
-            <li><a href="#">Static Page Content</a></li>
-            <li><a href="#">Hotel Top Destination</a></li>
-            <li><a href="#">Flights Top Destination</a></li>
-            <li><a href="#">Top Airlines</a></li>
-            <li><a href="#">Contact Address</a></li>
-            <li><a href="#">Voucher Terms & condition</a></li>
+            <li><a href="#"><img class="icon-img " src="icons/New folder/photo.svg" alt="">Home Page Banner
+                Image</a>
+            </li>
+            <li><a href="#"><img class="icon-img " src="icons/New folder/report-linechart.svg" alt="">
+                Static Page
+                Content</a></li>
+            <li><a href="#"><img class="icon-img " src="icons/New folder/sleeping-in-bed.svg" alt=""> Hotel
+                Top
+                Destination</a></li>
+            <li><a href="#"><img class="icon-img " src="icons/New folder/airplane (1).png" alt="">Flights
+                Top
+                Destination</a></li>
+            <li><a href="#"><img class="icon-img " src="icons/New folder/plane.png" alt="">Top Airlines</a>
+            </li>
+            <li><a href="#"><img class="icon-img " src="icons/New folder/address-card.svg" alt="">Contact
+                Address</a>
+            </li>
+            <li><a href="#"><img class="icon-img " src="icons/New folder/document.svg" alt="">Voucher Terms
+                &
+                condition</a></li>
           </div>
         </ul>
       </li>
       <li class="active">
         <a href="calendar.html">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-40q0-17 11.5-28.5T280-880q17 0 28.5 11.5T320-840v40h320v-40q0-17 11.5-28.5T680-880q17 0 28.5 11.5T720-840v40h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Zm280 240q-17 0-28.5-11.5T440-440q0-17 11.5-28.5T480-480q17 0 28.5 11.5T520-440q0 17-11.5 28.5T480-400Zm-160 0q-17 0-28.5-11.5T280-440q0-17 11.5-28.5T320-480q17 0 28.5 11.5T360-440q0 17-11.5 28.5T320-400Zm320 0q-17 0-28.5-11.5T600-440q0-17 11.5-28.5T640-480q17 0 28.5 11.5T680-440q0 17-11.5 28.5T640-400ZM480-240q-17 0-28.5-11.5T440-280q0-17 11.5-28.5T480-320q17 0 28.5 11.5T520-280q0 17-11.5 28.5T480-240Zm-160 0q-17 0-28.5-11.5T280-280q0-17 11.5-28.5T320-320q17 0 28.5 11.5T360-280q0 17-11.5 28.5T320-240Zm320 0q-17 0-28.5-11.5T600-280q0-17 11.5-28.5T640-320q17 0 28.5 11.5T680-280q0 17-11.5 28.5T640-240Z"/></svg>
-          <span>Email Configuration</span>
+          <img class="icon-img" src="icons/New folder/mail.svg" alt="">
+          <span style="color: white;">Email Configuration</span>
         </a>
       </li>
-       <li>
+      <li>
         <button onclick=toggleSubMenu(this) class="dropdown-btn">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="m221-313 142-142q12-12 28-11.5t28 12.5q11 12 11 28t-11 28L250-228q-12 12-28 12t-28-12l-86-86q-11-11-11-28t11-28q11-11 28-11t28 11l57 57Zm0-320 142-142q12-12 28-11.5t28 12.5q11 12 11 28t-11 28L250-548q-12 12-28 12t-28-12l-86-86q-11-11-11-28t11-28q11-11 28-11t28 11l57 57Zm339 353q-17 0-28.5-11.5T520-320q0-17 11.5-28.5T560-360h280q17 0 28.5 11.5T880-320q0 17-11.5 28.5T840-280H560Zm0-320q-17 0-28.5-11.5T520-640q0-17 11.5-28.5T560-680h280q17 0 28.5 11.5T880-640q0 17-11.5 28.5T840-600H560Z"/></svg>
+          <img class="icon-img" src="icons/New folder/setting.svg" alt="">
           <span>Settings</span>
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M480-361q-8 0-15-2.5t-13-8.5L268-556q-11-11-11-28t11-28q11-11 28-11t28 11l156 156 156-156q11-11 28-11t28 11q11 11 11 28t-11 28L508-372q-6 6-13 8.5t-15 2.5Z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+            <path
+              d="M480-361q-8 0-15-2.5t-13-8.5L268-556q-11-11-11-28t11-28q11-11 28-11t28 11l156 156 156-156q11-11 28-11t28 11q11 11 11 28t-11 28L508-372q-6 6-13 8.5t-15 2.5Z" />
+          </svg>
         </button>
         <ul class="sub-menu">
           <div>
-            <li><a href="#">Manage Domain</a></li>
-            <li><a href="#">Access Countrys</a></li>
-            <li><a href="#">Convenience Fees</a></li>
-            <li><a href="#">Manage Airline List</a></li>
-            <li><a href="#">Promo Code</a></li>
-            <li><a href="#">Manage API</a></li>
-            <li><a href="#">Currency Conversion</a></li>
-            <li><a href="#">Event Log</a></li>
-            <li><a href="#">Apperance</a></li>
-            <li><a href="#">Social Login</a></li>
-            <li><a href="#">Live Event</a></li>
+            <li>
+              <a href="#">
+                <img class="icon-img" src="icons/New folder/photo.svg" alt="">
+                Manage Domain</a>
+            </li>
+            <li>
+              <a href="#">
+                <img class="icon-img" src="icons/New folder/earth-9.svg" alt="">
+                Access Countrys</a>
+            </li>
+            <li>
+              <a href="#">
+                <img class="icon-img" src="icons/New folder/credit-card.svg" alt="">
+                Convenience Fees</a>
+            </li>
+            <li>
+              <a href="#">
+                <img class="icon-img" src="icons/New folder/airplane.svg" alt="">
+                Manage Airline List</a>
+            </li>
+            <li>
+              <a href="#">
+                <img class="icon-img" src="icons/New folder/ticket-coupon.svg" alt="">
+                Promo Code</a>
+            </li>
+            <li>
+              <a href="#">
+                <img class="icon-img" src="icons/New folder/coin.svg" alt="">
+                Manage API</a>
+            </li>
+            <li>
+              <a href="#">
+                <img class="icon-img" src="icons/New folder/rupee-sign.svg" alt="">
+                Currency Conversion</a>
+            </li>
+            <li>
+              <a href="#">
+                <img class="icon-img" src="icons/New folder/man-working-on-a-laptop-from-side-view.png" alt="">
+                Event Log</a>
+            </li>
+            <li>
+              <a href="#">
+                <img class="icon-img" src="icons/New folder/graphic-design.png" alt="">
+                Apperance</a>
+            </li>
+            <li>
+              <a href="#">
+                <img class="icon-img" src="icons/New folder/social-network-brand.svg" alt="">
+                Social Login</a>
+            </li>
+            <li>
+              <a href="#">
+                <img class="icon-img" src="icons/New folder/event-badged-1.svg" alt="">
+                Live Event</a>
+            </li>
           </div>
         </ul>
       </li>
       <li>
         <a href="profile.html">
-          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-240v-32q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v32q0 33-23.5 56.5T720-160H240q-33 0-56.5-23.5T160-240Zm80 0h480v-32q0-11-5.5-20T700-306q-54-27-109-40.5T480-360q-56 0-111 13.5T260-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T560-640q0-33-23.5-56.5T480-720q-33 0-56.5 23.5T400-640q0 33 23.5 56.5T480-560Zm0-80Zm0 400Z"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+            <path
+              d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-240v-32q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v32q0 33-23.5 56.5T720-160H240q-33 0-56.5-23.5T160-240Zm80 0h480v-32q0-11-5.5-20T700-306q-54-27-109-40.5T480-360q-56 0-111 13.5T260-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T560-640q0-33-23.5-56.5T480-720q-33 0-56.5 23.5T400-640q0 33 23.5 56.5T480-560Zm0-80Zm0 400Z" />
+          </svg>
           <span>Profile</span>
         </a>
       </li>
     </ul>
   </nav>
-  <main>
-    <div class="container">
-      <h2>Hello World</h2>
-      <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Veritatis porro iure quaerat aliquam! Optio dolorum in eum provident, facilis error repellendus excepturi enim dolor deleniti adipisci consectetur doloremque, unde maiores odit sapiente. Atque ab necessitatibus laboriosam consequatur eius similique, ex dolorum eum eaque sequi id veritatis voluptates perspiciatis, cupiditate pariatur.</p>
+
+  <div class="container-fluid">
+    <!-- HEADER -->
+    <div class="top-bar">
+      <h5>Dashboard</h5>
+      <div class="d-flex gap-4 align-items-center">
+        <div class="toggle-btn" id="themeToggle">
+          <i class="fa-solid fa-moon"></i>
+        </div>
+        <strong>Mr Admin Starlegends</strong>
+      </div>
     </div>
-    <div class="container">
-      <h2>Example Heading</h2>
-      <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Hic aliquid corrupti, tenetur fuga magnam necessitatibus blanditiis quod sint excepturi laborum esse alias labore molestias adipisci, nostrum corporis ex maiores quis dolore quidem asperiores odio ad fugit eos! Delectus modi quas ipsa deleniti consequuntur nihil, hic in ipsum exercitationem blanditiis natus, ex, expedita eos. Excepturi quidem harum hic nam magnam deserunt illum quis dolorum eos ipsum ut natus sapiente sit, officia obcaecati assumenda tempore molestias? In fugiat iure laboriosam quasi, eum suscipit, harum autem saepe ut, soluta aspernatur ducimus eos magnam quidem officiis. Laboriosam nemo explicabo delectus, et quos vero cum?</p>
+
+    <div class="container-fluid  mt-5">
+
+      <!-- ================= STATS ================= -->
+      <div class="row g-4 mb-5">
+
+        <!-- FLIGHT -->
+        <div class="col-md-3">
+          <div class="stat-card parallax animate" style="--glow:rgba(56,189,248,.6)">
+            <div class="stat-icon"
+              style="background:linear-gradient(135deg,#2563eb,#38bdf8);box-shadow:0 0 30px rgba(56,189,248,.6)">
+              <i class="fa-solid fa-plane"></i>
+            </div>
+            <div class="stat-content">
+              <p>Flight Booking</p>
+              <div class="stat-number" data-count="52">0</div>
+              <div class="stat-actions">
+                <a class="report-btn b2c" href="#">B2C Report</a>
+                <a class="report-btn agent" href="#">Agent Report</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- HOTEL -->
+        <div class="col-md-3">
+          <div class="stat-card parallax animate" style="--glow:rgba(34,197,94,.6)">
+            <div class="stat-icon"
+              style="background:linear-gradient(135deg,#16a34a,#22c55e);box-shadow:0 0 30px rgba(34,197,94,.6)">
+              <i class="fa-solid fa-hotel"></i>
+            </div>
+            <div class="stat-content">
+              <p>Hotel Booking</p>
+              <div class="stat-number" data-count="194">0</div>
+              <div class="stat-actions">
+                <a class="report-btn b2c" href="#">B2C Report</a>
+                <a class="report-btn agent" href="#">Agent Report</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TRANSFER -->
+        <div class="col-md-3">
+          <div class="stat-card parallax animate" style="--glow:rgba(245,158,11,.6)">
+            <div class="stat-icon"
+              style="background:linear-gradient(135deg,#d97706,#f59e0b);box-shadow:0 0 30px rgba(245,158,11,.6)">
+              <i class="fa-solid fa-car"></i>
+            </div>
+            <div class="stat-content">
+              <p>Transfer Booking</p>
+              <div class="stat-number" data-count="9">0</div>
+              <div class="stat-actions">
+                <a class="report-btn b2c" href="#">B2C Report</a>
+                <a class="report-btn agent" href="#">Agent Report</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ACTIVITY -->
+        <div class="col-md-3">
+          <div class="stat-card parallax animate" style="--glow:rgba(236,72,153,.6)">
+            <div class="stat-icon"
+              style="background:linear-gradient(135deg,#db2777,#ec4899);box-shadow:0 0 30px rgba(236,72,153,.6)">
+              <i class="fa-solid fa-binoculars"></i>
+            </div>
+            <div class="stat-content">
+              <p>Activities</p>
+              <div class="stat-number" data-count="17">0</div>
+              <div class="stat-actions">
+                <a class="report-btn b2c" href="#">B2C Report</a>
+                <a class="report-btn agent" href="#">Agent Report</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ================= LOWER SECTION ================= -->
+      <div class="row g-4">
+        <div class="col-md-6">
+          <div class="dashboard-card animate">
+            <h4>Booking Calendar</h4>
+            <div id="calendar"></div>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="dashboard-card animate">
+            <h4>Booking Details</h4>
+            <canvas id="chart"></canvas>
+          </div>
+        </div>
+      </div>
+
     </div>
-    <div class="container">
-      <h2>Lorem Ipsum</h2>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Inventore repudiandae labore veniam reprehenderit voluptatum, laboriosam perferendis fuga, dolore quam quas nostrum totam sunt esse expedita. Vero distinctio omnis accusantium. Quisquam ullam saepe cupiditate magni numquam totam perspiciatis error velit, debitis veniam labore possimus aut sunt, reiciendis natus. Impedit provident voluptatum nulla fuga error a magnam, corporis natus aperiam fugit quod perferendis quos quaerat, numquam sequi doloribus tenetur dolorem voluptate deleniti, odio minus. Deserunt eius quasi odit voluptas unde voluptatum dicta cumque exercitationem soluta beatae porro distinctio, delectus officiis, nobis officia ullam necessitatibus, rem natus corrupti nam! Est, nihil molestias fugiat sed quae enim commodi expedita soluta tempore molestiae fuga adipisci rem esse voluptates quos, ut quasi sunt ad a perspiciatis ducimus maxime animi. Adipisci officia doloribus magni alias maiores ab quo, eos mollitia sint esse. Labore odio, architecto nihil quaerat soluta blanditiis impedit laudantium esse officiis dolorum dolore libero, id sequi minima incidunt eum facilis itaque distinctio. Voluptas doloremque minus reiciendis ex beatae laudantium cum sequi repellat blanditiis molestiae. Cumque, libero nulla! Sit, quisquam magni dolore consectetur odio impedit adipisci voluptas ab, laboriosam autem nihil nam est ipsa excepturi obcaecati eos neque! Omnis similique qui veritatis. Repellat magni dolorem, facilis eaque, harum molestias, delectus est adipisci laudantium velit optio blanditiis debitis? Tenetur totam maiores animi officiis eligendi expedita nemo corrupti distinctio. Cum libero soluta beatae doloribus sit, repellendus nobis vel obcaecati velit dolorem voluptate magnam inventore quas pariatur quam reprehenderit molestiae hic sunt dicta illo amet quis magni accusamus sequi? Vel quis, dolores iusto suscipit excepturi laboriosam repellat consectetur! Maiores deserunt, pariatur nesciunt consequuntur recusandae minima assumenda consequatur inventore natus debitis illo velit voluptatum necessitatibus qui aspernatur illum impedit magni dignissimos ea, molestias tempora corporis, asperiores iusto possimus. Libero expedita aspernatur officia totam dolorum culpa, minus, alias adipisci eligendi suscipit voluptates, magnam laudantium? Inventore cupiditate perspiciatis mollitia excepturi, voluptatibus ducimus expedita provident. Dicta, odit. Odio, qui repudiandae! Maiores dignissimos, magnam deleniti reprehenderit ex cum ea eveniet placeat quae, ad at perspiciatis nobis corporis doloribus voluptatem nulla aliquam sunt accusamus facere quaerat necessitatibus ipsa! Nam quisquam dicta minima commodi nostrum. Exercitationem necessitatibus optio cumque voluptate modi amet consequuntur similique ex inventore explicabo doloremque esse sed sequi nemo rem, nostrum ullam. Totam repellat ut ipsa quisquam rem, nulla, suscipit debitis atque earum quis voluptates quaerat exercitationem architecto repellendus placeat, tenetur incidunt distinctio consectetur reiciendis minima officiis aliquam? Ipsum sequi hic officia iste a. Blanditiis, dicta! Eveniet molestias ut natus odio fugiat cum necessitatibus, architecto, quo a quisquam autem porro explicabo ipsam, nostrum deserunt possimus expedita eum est corporis quibusdam cupiditate! Fugiat, quaerat saepe. Harum modi eligendi beatae alias fugiat. Nostrum cum nisi saepe dicta iste cupiditate, deserunt omnis, doloremque a distinctio eum rem adipisci ab? Sapiente, dicta ipsam blanditiis earum omnis necessitatibus temporibus, excepturi accusantium delectus quo quod iusto ad aliquam nemo ducimus ab nobis inventore sequi veritatis? Nulla, dolorem. Voluptas, obcaecati non facilis repellendus ratione officiis veritatis, modi culpa rerum placeat voluptatum quia ex? Officia quos dolorum repellat deserunt voluptas praesentium.</p>
-    </div>
-  </main>
+  </div>
+  <script>
+    /* GSAP ENTRANCE + SCROLL */
+    gsap.from(".animate", {
+      y: 80,
+      opacity: 0,
+      duration: 1.2,
+      stagger: .15,
+      ease: "power4.out",
+      scrollTrigger: { trigger: ".animate", start: "top 85%" }
+    });
+
+    /* COUNTERS */
+    document.querySelectorAll(".stat-number").forEach(el => {
+      gsap.to(el, {
+        innerText: el.dataset.count,
+        duration: 2,
+        snap: { innerText: 1 }
+      });
+    });
+
+    /* CURSOR PARALLAX */
+    document.querySelectorAll(".parallax").forEach(card => {
+      card.addEventListener("mousemove", e => {
+        card.style.setProperty("--x", e.offsetX + "px");
+        card.style.setProperty("--y", e.offsetY + "px");
+      });
+    });
+
+    /* THEME TOGGLE */
+    document.getElementById("themeToggle").onclick = () => {
+      document.body.classList.toggle("light");
+    };
+
+    /* FULL CALENDAR */
+    new FullCalendar.Calendar(document.getElementById("calendar"), {
+      initialView: "dayGridMonth",
+      height: 420,
+      events: [
+        { title: "Flight Booking", date: "2026-01-05" },
+        { title: "Hotel Booking", date: "2026-01-10" },
+        { title: "Activity", date: "2026-01-18" }
+      ]
+    }).render();
+
+    /* CHART */
+    new Chart(document.getElementById("chart"), {
+      type: "line",
+      data: {
+        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+        datasets: [{
+          data: [12, 19, 8, 15, 10, 20],
+          borderColor: "#38bdf8",
+          borderWidth: 3,
+          tension: .4
+        }]
+      },
+      options: { plugins: { legend: { display: false } } }
+    });
+  </script>
+
 </body>
+
 </html>
