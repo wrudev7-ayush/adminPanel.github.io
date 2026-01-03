@@ -199,7 +199,7 @@ document.addEventListener("DOMContentLoaded", function () {
       otpBoxes.forEach(b => b.classList.add("otp-success"));
 
       setTimeout(() => {
-        window.location.replace("https://google.com");
+        window.location.replace("https://wrudev7-ayush.github.io/adminPanel.github.io/index.html");
       }, 800);
 
     } else {

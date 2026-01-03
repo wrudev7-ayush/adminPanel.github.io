@@ -23,10 +23,10 @@ body{
   display: grid;
   grid-template-columns: auto 1fr;
 }
-#sidebar{
+/* #sidebar{
   box-sizing: border-box;
-  height: 100vh;
-  width: 250px;
+  height: auto;
+  width: 300px;
   padding: 5px 1em;
   background-color: var(--base-clr);
   border-right: 1px solid var(--line-clr);
@@ -37,7 +37,25 @@ body{
   transition: 300ms ease-in-out;
   overflow: hidden;
   text-wrap: nowrap;
+} */
+ #sidebar{
+  box-sizing: border-box;
+  height: 100vh;              /* 🔑 full screen height */
+  width: 300px;
+  padding: 5px 1em;
+  background-color: var(--base-clr);
+  border-right: 1px solid var(--line-clr);
+
+  position: sticky;
+  top: 0;
+  align-self: stretch;        /* 🔑 stretch in grid */
+  transition: 300ms ease-in-out;
+
+  overflow-y: auto;           /* 🔑 sidebar scroll */
+  overflow-x: hidden;
+  text-wrap: nowrap;
 }
+
 #sidebar.close{
   padding: 5px;
   width: 60px;
@@ -59,6 +77,29 @@ body{
   svg{
     fill: var(--accent-clr);
   }
+}
+/* ===== Thin scrollbar for sidebar ===== */
+#sidebar::-webkit-scrollbar {
+  width: 4px;               /* 👈 very thin */
+}
+
+#sidebar::-webkit-scrollbar-track {
+  background: transparent; /* no background */
+}
+
+#sidebar::-webkit-scrollbar-thumb {
+  background-color: #42434a;
+  border-radius: 10px;
+}
+
+#sidebar::-webkit-scrollbar-thumb:hover {
+  background-color: #5e63ff; /* accent color on hover */
+}
+
+/* Firefox support */
+#sidebar {
+  scrollbar-width: thin;          /* 👈 thin scrollbar */
+  scrollbar-color: #42434a transparent;
 }
 
 #sidebar a, #sidebar .dropdown-btn, #sidebar .logo{
@@ -126,7 +167,10 @@ body{
 }
 
 main{
-  padding: min(30px, 7%);
+  /* padding: min(30px, 7%); */
+    padding: min(30px, 7%);
+  height: 100vh;              /* 🔑 */
+  overflow-y: auto; 
 }
 main p{
   color: var(--secondary-text-clr);
