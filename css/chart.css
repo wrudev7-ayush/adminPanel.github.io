@@ -1,0 +1,56 @@
+    :root {
+  --bg: #f5f7fb;
+  --card: #ffffff;
+  --text: #0f172a;
+  --muted: #64748b;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  font-family: "Inter", "Poppins", sans-serif;
+  color: var(--text);
+}
+
+.report-wrapper {
+  padding: 40px;
+}
+
+.report-card {
+  max-width: 1300px;
+  margin: auto;
+  background: var(--card);
+  border-radius: 22px;
+  padding: 32px;
+  box-shadow: 0 30px 70px rgba(0,0,0,0.08);
+}
+
+/* Header */
+.report-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.report-header h2 {
+  font-size: 26px;
+  margin: 0;
+}
+
+.report-header p {
+  margin-top: 6px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.menu-btn {
+  font-size: 22px;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+/* Chart */
+.chart-container {
+  margin-top: 20px;
+}

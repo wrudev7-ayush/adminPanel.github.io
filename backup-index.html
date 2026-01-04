@@ -31,7 +31,6 @@
   <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
 
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
   <style>
     /* ================= ROOT ================= */
     :root {
@@ -582,104 +581,19 @@
       <!-- ================= LOWER SECTION ================= -->
       <div class="row g-4">
         <div class="col-md-6">
-          <div class="dashboard-card animate lower-calender">
+          <div class="dashboard-card animate">
             <h4>Booking Calendar</h4>
             <div id="calendar"></div>
           </div>
         </div>
 
         <div class="col-md-6">
-          <div class="dashboard-card animate lower-chart">
+          <div class="dashboard-card animate">
             <h4>Booking Details</h4>
             <canvas id="chart"></canvas>
           </div>
         </div>
       </div>
-<!-- ================= MEMBERS & TRANSACTIONS ================= -->
-<div class="row g-4 mt-4">
-
-  <!-- Latest Members -->
-  <div class="col-md-6">
-    <div class="dashboard-card animate modern-card hoverable">
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <h4 class="mb-0">Latest Members</h4>
-        <div class="d-flex gap-2">
-          <span class="pill">6 B2C</span>
-          <span class="pill">6 B2B</span>
-        </div>
-      </div>
-
-      <div class="members-grid">
-        <div class="member-card" data-name="Customer">
-          <img src="https://i.pravatar.cc/100?img=31">
-          <h6>Customer</h6>
-          <span>Dec 2025</span>
-        </div>
-
-        <div class="member-card" data-name="Jani Circles">
-          <img src="https://i.pravatar.cc/100?img=32">
-          <h6>Jani Circles</h6>
-          <span>Sep 2025</span>
-        </div>
-
-        <div class="member-card" data-name="+91">
-          <img src="https://i.pravatar.cc/100?img=33">
-          <h6>+91</h6>
-          <span>Sep 2025</span>
-        </div>
-
-        <div class="member-card" data-name="Michelle">
-          <img src="https://i.pravatar.cc/100?img=34">
-          <h6>Michelle</h6>
-          <span>Aug 2025</span>
-        </div>
-      </div>
-
-      <div class="text-center mt-3">
-        <a href="#" class="view-link">View All Users</a>
-      </div>
-    </div>
-  </div>
-
-  <!-- Transactions -->
-  <div class="col-md-6">
-    <div class="dashboard-card animate modern-card hoverable transactions-card">
-      <h4 class="mb-3">Recent Booking Transactions</h4>
-
-      <div class="transaction-item" data-title="Flight Booking">
-        <div class="tx-icon flight"><i class="fa-solid fa-plane"></i></div>
-        <div class="tx-info">
-          <strong>FB18-163519</strong>
-          <span>Flight transaction completed</span>
-        </div>
-        <div class="tx-amount">$230.68</div>
-      </div>
-
-      <div class="transaction-item" data-title="Transfer Booking">
-        <div class="tx-icon transfer"><i class="fa-solid fa-car"></i></div>
-        <div class="tx-info">
-          <strong>TB03-143548</strong>
-          <span>Transfer transaction completed</span>
-        </div>
-        <div class="tx-amount">$15.86</div>
-      </div>
-
-      <div class="text-center mt-3">
-        <a href="#" class="view-link">View All Transactions</a>
-      </div>
-    </div>
-  </div>
-
-</div>
-
-<!-- MODAL -->
-<div class="modal fade show-modal" id="infoModal">
-  <div class="modal-box">
-    <h4 id="modalTitle"></h4>
-    <p class="mt-2">More details can be shown here.</p>
-    <button onclick="closeInfoModal()">Close</button>
-  </div>
-</div>
 
     </div>
   </div>
@@ -743,58 +657,6 @@
     });
   </script>
 
-<script>
-  /* ===== GSAP HOVERS ===== */
-document.querySelectorAll(".member-card,.transaction-item").forEach(el => {
-  el.addEventListener("mouseenter", () => {
-    gsap.to(el, { scale: 1.06, duration: .3 });
-  });
-  el.addEventListener("mouseleave", () => {
-    gsap.to(el, { scale: 1, duration: .3 });
-  });
-});
-
-/* ===== MODAL ===== */
-const modal = document.getElementById("infoModal");
-const modalTitle = document.getElementById("modalTitle");
-
-document.querySelectorAll(".member-card").forEach(m => {
-  m.onclick = () => {
-    modalTitle.innerText = "Member: " + m.dataset.name;
-    openInfoModal();
-  };
-});
-
-document.querySelectorAll(".transaction-item").forEach(t => {
-  t.onclick = () => {
-    modalTitle.innerText = t.dataset.title;
-    openInfoModal();
-  };
-});
-
-function openInfoModal() {
-  modal.style.display = "flex";
-  gsap.from(".modal-box", {
-    scale: .85,
-    opacity: 0,
-    duration: .4,
-    ease: "back.out(1.4)"
-  });
-}
-
-function closeInfoModal() {
-  modal.style.display = "none";
-}
-/* ===== CURSOR GLOW FOR DASHBOARD CARDS ===== */
-document.querySelectorAll(".dashboard-card").forEach(card => {
-  card.addEventListener("mousemove", e => {
-    const rect = card.getBoundingClientRect();
-    card.style.setProperty("--x", e.clientX - rect.left + "px");
-    card.style.setProperty("--y", e.clientY - rect.top + "px");
-  });
-});
-
-</script>
 </body>
 
 </html>
