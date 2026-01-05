@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>User Management</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <!-- custom script  -->
+  <script src="js/app.js" defer></script>
+  <style>
+    /* ================= ROOT (YOUR THEME) ================= */
+    :root {
+      --bg: #020617;
+      --card: rgba(255, 255, 255, .08);
+      --border: rgba(255, 255, 255, .15);
+      --text: #e5e7eb;
+      --accent: #5e63ff;
+    }
+
+    /* ================= BASE ================= */
+    body {
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(circle at top, #1e293b, var(--bg));
+      color: var(--text);
+    }
+
+    /* ================= CARD ================= */
+    .dashboard-card {
+      background: var(--card);
+      backdrop-filter: blur(18px);
+      border-radius: 24px;
+      padding: 28px;
+      border: 1px solid var(--border);
+      box-shadow: 0 30px 80px rgba(0, 0, 0, .6);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Glow */
+    .dashboard-card::after {
+      content: "";
+      position: absolute;
+      width: 340px;
+      height: 340px;
+      background: radial-gradient(circle, rgba(94, 99, 255, .35), transparent 70%);
+      top: var(--y, 50%);
+      left: var(--x, 50%);
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      pointer-events: none;
+      transition: .3s;
+    }
+
+    .dashboard-card:hover::after {
+      opacity: 1
+    }
+
+    /* ================= HEADER ================= */
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .page-header h3 {
+      margin: 0
+    }
+
+    /* ================= BUTTONS ================= */
+    .btn-ui {
+      padding: 8px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, .06);
+      color: var(--text);
+      transition: .3s;
+    }
+
+    .btn-ui.primary {
+      background: linear-gradient(135deg, #5e63ff, #38bdf8);
+      border: none;
+    }
+
+    .btn-ui:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, .4);
+    }
+
+    /* ================= SEARCH ================= */
+    .glass-input {
+      background: rgba(255, 255, 255, .04);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 14px;
+      padding: 10px 14px;
+    }
+    .glass-input:focus {
+       border-color: var(--accent) !important;
+    box-shadow: 0 0 0 3px rgba(94, 99, 255, .25);
+      outline: none;
+    }
+    .glass-input::placeholder {
+      color: #9ca3af
+    }
+
+    /* ================= TABLE ================= */
+    .table-wrap {
+      margin-top: 30px;
+    }
+
+    .modern-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 14px;
+    }
+
+    .modern-table thead th {
+      font-size: 12px;
+      text-transform: uppercase;
+      color: #9ca3af;
+      font-weight: 500;
+    }
+
+    .modern-table tbody tr {
+      background: rgba(255, 255, 255, .04);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      transition: .3s;
+    }
+
+    .modern-table tbody tr:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, .45);
+    }
+
+    .modern-table td {
+      padding: 16px;
+      border: none;
+      vertical-align: middle;
+    }
+
+    /* ================= STATUS ================= */
+    .status {
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .status.active {
+      background: rgba(34, 197, 94, .15);
+      color: #22c55e;
+    }
+
+    .status.inactive {
+      background: rgba(239, 68, 68, .15);
+      color: #ef4444;
+    }
+
+    /* ================= ACTION ================= */
+    .icon-btn {
+      background: rgba(255, 255, 255, .06);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 10px;
+      border-radius: 10px;
+      transition: .3s;
+    }
+
+    .icon-btn:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    /* ================= PAGINATION ================= */
+    .pagination-ui {
+      display: flex;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    .pagination-ui span {
+      padding: 6px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+    }
+
+    .pagination-ui .active {
+      background: var(--accent);
+    }
+
+    .text-muted {
+      color: white !important;
+    }
+
+    /* ================= RESPONSIVE ================= */
+    @media(max-width:768px) {
+      body {
+        padding: 20px
+      }
+    }
+
+    .ums {
+      margin: 20px;
+    }
+    .btn-ui.active {
+  background: linear-gradient(135deg, #5e63ff, #38bdf8);
+  border: none;
+}
+
+/* create user sections  */
+.dashboard-card{
+  background-color: #343a49;
+  backdrop-filter:blur(18px);
+  border-radius:24px;
+  padding:30px;
+  border:1px solid var(--border);
+  box-shadow:0 30px 80px rgba(0,0,0,.6);
+}
+.dashboard-card:hover{
+/* background:var(--card);
+transition: .7s ease-in; */
+}
+/* Section Header */
+.form-section-title{
+  background:linear-gradient(135deg,#5e63ff,#38bdf8);
+  color:#fff;
+  padding:12px 18px;
+  border-radius:14px;
+  font-weight:600;
+  margin-bottom:24px;
+}
+
+/* Labels */
+.form-label{
+  font-size:13px;
+  font-weight:500;
+  color:#c7cbe0;
+}
+
+/* Inputs */
+.form-control,
+.form-select,
+textarea{
+  background:rgba(255,255,255,.06)!important;
+  border:1px solid var(--border)!important;
+  color:var(--text)!important;
+  border-radius:14px!important;
+  padding:10px 14px;
+}
+
+.form-control::placeholder{
+  color:#9ca3af;
+}
+
+.form-control:focus,
+.form-select:focus,
+textarea:focus{
+  border-color:var(--accent)!important;
+  box-shadow:0 0 0 3px rgba(94,99,255,.25);
+}
+
+/* Radio */
+.form-check-input{
+  background-color:transparent;
+  border:1px solid var(--border);
+}
+.form-check-input:checked{
+  background-color:var(--accent);
+  border-color:var(--accent);
+}
+.form-actions{
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  margin-top:30px;
+}
+
+
+/* ===== FORM GRID ALIGNMENT FIX ===== */
+.row.g-4 {
+  align-items: flex-end;
+}
+
+/* Label spacing consistency */
+.form-label {
+  margin-bottom: 6px;
+  display: block;
+}
+
+/* Equal input height */
+.form-control,
+.form-select {
+  height: 44px;
+}
+
+/* Address textarea alignment */
+textarea.form-control {
+  height: 44px;
+  resize: none;
+}
+
+/* Section spacing */
+.form-section-title {
+  margin-top: 10px;
+}
+
+/* Radio alignment */
+.form-check {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-check-label {
+  margin-bottom: 0;
+}
+
+/* User status alignment */
+.user-status-group {
+  margin-top: 6px;
+}
+
+/* Button alignment polish */
+.form-actions {
+  padding-top: 10px;
+}
+textarea.form-control::-webkit-scrollbar {
+  display: none;
+}
+
+  </style>
+</head>
+
+<body>
+  <nav id="sidebar">
+    <ul>
+      <li>
+        <span class="logo">Mr. Admin</span>
+        <button onclick=toggleSidebar() id="toggle-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+            <path
+              d="m313-480 155 156q11 11 11.5 27.5T468-268q-11 11-28 11t-28-11L228-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l184-184q11-11 27.5-11.5T468-692q11 11 11 28t-11 28L313-480Zm264 0 155 156q11 11 11.5 27.5T732-268q-11 11-28 11t-28-11L492-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l184-184q11-11 27.5-11.5T732-692q11 11 11 28t-11 28L577-480Z" />
+          </svg>
+        </button>
+      </li>
+      <li>
+        <a href="index.html">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+            <path
+              d="M240-200h120v-200q0-17 11.5-28.5T400-440h160q17 0 28.5 11.5T600-400v200h120v-360L480-740 240-560v360Zm-80 0v-360q0-19 8.5-36t23.5-28l240-180q21-16 48-16t48 16l240 180q15 11 23.5 28t8.5 36v360q0 33-23.5 56.5T720-120H560q-17 0-28.5-11.5T520-160v-200h-80v200q0 17-11.5 28.5T400-120H240q-33 0-56.5-23.5T160-200Zm320-270Z" />
+          </svg>
+          <span>Home</span>
+        </a>
+      </li>
+      <li>
+        <a href="dashboard.html">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+            <path
+              d="M520-640v-160q0-17 11.5-28.5T560-840h240q17 0 28.5 11.5T840-800v160q0 17-11.5 28.5T800-600H560q-17 0-28.5-11.5T520-640ZM120-480v-320q0-17 11.5-28.5T160-840h240q17 0 28.5 11.5T440-800v320q0 17-11.5 28.5T400-440H160q-17 0-28.5-11.5T120-480Zm400 320v-320q0-17 11.5-28.5T560-520h240q17 0 28.5 11.5T840-480v320q0 17-11.5 28.5T800-120H560q-17 0-28.5-11.5T520-160Zm-400 0v-160q0-17 11.5-28.5T160-360h240q17 0 28.5 11.5T440-320v160q0 17-11.5 28.5T400-120H160q-17 0-28.5-11.5T120-160Zm80-360h160v-240H200v240Zm400 320h160v-240H600v240Zm0-480h160v-80H600v80ZM200-200h160v-80H200v80Zm160-320Zm240-160Zm0 240ZM360-280Z" />
+          </svg>
+          <span>Dashboard</span>
+        </a>
+      </li>
+      <li>
+        <button onclick=toggleSubMenu(this) class="dropdown-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+            <path
+              d="M520-640v-160q0-17 11.5-28.5T560-840h240q17 0 28.5 11.5T840-800v160q0 17-11.5 28.5T800-600H560q-17 0-28.5-11.5T520-640ZM120-480v-320q0-17 11.5-28.5T160-840h240q17 0 28.5 11.5T440-800v320q0 17-11.5 28.5T400-440H160q-17 0-28.5-11.5T120-480Zm400 320v-320q0-17 11.5-28.5T560-520h240q17 0 28.5 11.5T840-480v320q0 17-11.5 28.5T800-120H560q-17 0-28.5-11.5T520-160Zm-400 0v-160q0-17 11.5-28.5T160-360h240q17 0 28.5 11.5T440-320v160q0 17-11.5 28.5T400-120H160q-17 0-28.5-11.5T120-160Zm80-360h160v-240H200v240Zm400 320h160v-240H600v240Zm0-480h160v-80H600v80ZM200-200h160v-80H200v80Zm160-320Zm240-160Zm0 240ZM360-280Z" />
+          </svg>
+          <span>Dashboard 2</span>
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+            <path
+              d="M480-361q-8 0-15-2.5t-13-8.5L268-556q-11-11-11-28t11-28q11-11 28-11t28 11l156 156 156-156q11-11 28-11t28 11q11 11 11 28t-11 28L508-372q-6 6-13 8.5t-15 2.5Z" />
+          </svg>
+        </button>
+        <ul class="sub-menu">
+          <div>
+            <li>
+
+              <a href="#">
+                <img src="icons/New folder/search-left-1504.svg" class="icon-img" alt="">
+                Search History</a>
+            </li>
+            <li><a href="#"><img class="icon-img " src="icons/New folder/destination-point.svg" alt="">Top
+                Destinations</a></li>
+          </div>
+        </ul>
+      </li>
+      <li>
+        <button onclick=toggleSubMenu(this) class="dropdown-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#e8eaed">
+            <path
+              d="M5 21C5 17.134 8.13401 14 12 14C15.866 14 19 17.134 19 21M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z" />
+          </svg>
+          <span>User</span>
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+            <path
+              d="M480-361q-8 0-15-2.5t-13-8.5L268-556q-11-11-11-28t11-28q11-11 28-11t28 11l156 156 156-156q11-11 28-11t28 11q11 11 11 28t-11 28L508-372q-6 6-13 8.5t-15 2.5Z" />
+          </svg>
+        </button>
+        <ul class="sub-menu">
+          <div>
+            <li><a href="#"><img class="icon-img" src="icons/New folder/dry-clean.png" alt="">B2B</a></li>
+            <li><a href="#"><img class="icon-img" src="icons/New folder/dry-clean.png" alt="">B2C</a></li>
+          </div>
+        </ul>
+      </li>
+      <li>
+        <button onclick=toggleSubMenu(this) class="dropdown-btn">
+          <img class="icon-img" src="icons/New folder/chart-waterfall.svg" alt="">
+          <span>Report</span>
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+            <path
+              d="M480-361q-8 0-15-2.5t-13-8.5L268-556q-11-11-11-28t11-28q11-11 28-11t28 11l156 156 156-156q11-11 28-11t28 11q11 11 11 28t-11 28L508-372q-6 6-13 8.5t-15 2.5Z" />
+          </svg>
+        </button>
+        <ul class="sub-menu">
+          <div>
+            <li><a href="#"><img class="icon-img" src="icons/New folder/dry-clean.png" alt="">B2B</a></li>
+            <li><a href="#"><img class="icon-img" src="icons/New folder/dry-clean.png" alt="">B2C</a></li>
+            <li><a href="#"><img class="icon-img" src="icons/New folder/money-transfer.png" alt="">Transaction Logs</a>
+            </li>
+          </div>
+        </ul>
+      </li>
+
+      <li>
+        <button onclick=toggleSubMenu(this) class="dropdown-btn">
+          <img class="icon-img" src="icons/New folder/plus-square (1).svg" alt="">
+          <span>Package Manage</span>
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+            <path
+              d="M480-361q-8 0-15-2.5t-13-8.5L268-556q-11-11-11-28t11-28q11-11 28-11t28 11l156 156 156-156q11-11 28-11t28 11q11 11 11 28t-11 28L508-372q-6 6-13 8.5t-15 2.5Z" />
+          </svg>
+        </button>
+        <ul class="sub-menu">
+          <div>
+            <li><a href="#"><img class="icon-img" src="icons/New folder/dry-clean.png" alt="">View Package
+                Type</a></li>
+            <li><a href="#"><img class="icon-img" src="icons/New folder/add-package.png" alt="">Add New
+                Package</a></li>
+            <li><a href="#"><img class="icon-img" src="icons/New folder/dry-clean.png" alt="">View
+                Package</a></li>
+            <li><a href="#"><img class="icon-img" src="icons/New folder/counter.png" alt="">View Package
+                Enquires</a>
+            </li>
+          </div>
+        </ul>
+      </li>
+      <li>
+        <button onclick=toggleSubMenu(this) class="dropdown-btn">
+          <img class="icon-img" src="icons/New folder/mail.svg" alt="">
+          <span>Email Subscription</span>
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+            <path
+              d="M480-361q-8 0-15-2.5t-13-8.5L268-556q-11-11-11-28t11-28q11-11 28-11t28 11l156 156 156-156q11-11 28-11t28 11q11 11 11 28t-11 28L508-372q-6 6-13 8.5t-15 2.5Z" />
+          </svg>
+        </button>
+        <ul class="sub-menu">
+          <div>
+            <li><a href="#"><img class="icon-img" src="icons/New folder/view.png" alt="">View Emails</a>
+            </li>
+          </div>
+        </ul>
+      </li>
+      <li>
+        <button onclick=toggleSubMenu(this) class="dropdown-btn">
+          <img class="icon-img" src="icons/New folder/computer-monitor.svg" alt="">
+          <span>CMS</span>
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+            <path
+              d="M480-361q-8 0-15-2.5t-13-8.5L268-556q-11-11-11-28t11-28q11-11 28-11t28 11l156 156 156-156q11-11 28-11t28 11q11 11 11 28t-11 28L508-372q-6 6-13 8.5t-15 2.5Z" />
+          </svg>
+        </button>
+        <ul class="sub-menu">
+          <div>
+            <li><a href="#"><img class="icon-img " src="icons/New folder/photo.svg" alt="">Home Page Banner
+                Image</a>
+            </li>
+            <li><a href="#"><img class="icon-img " src="icons/New folder/report-linechart.svg" alt="">
+                Static Page
+                Content</a></li>
+            <li><a href="#"><img class="icon-img " src="icons/New folder/sleeping-in-bed.svg" alt=""> Hotel
+                Top
+                Destination</a></li>
+            <li><a href="#"><img class="icon-img " src="icons/New folder/airplane (1).png" alt="">Flights
+                Top
+                Destination</a></li>
+            <li><a href="#"><img class="icon-img " src="icons/New folder/plane.png" alt="">Top Airlines</a>
+            </li>
+            <li><a href="#"><img class="icon-img " src="icons/New folder/address-card.svg" alt="">Contact
+                Address</a>
+            </li>
+            <li><a href="#"><img class="icon-img " src="icons/New folder/document.svg" alt="">Voucher Terms
+                &
+                condition</a></li>
+          </div>
+        </ul>
+      </li>
+      <li class="active">
+        <a href="calendar.html">
+          <img class="icon-img" src="icons/New folder/mail.svg" alt="">
+          <span style="color: white;">Email Configuration</span>
+        </a>
+      </li>
+      <li>
+        <button onclick=toggleSubMenu(this) class="dropdown-btn">
+          <img class="icon-img" src="icons/New folder/setting.svg" alt="">
+          <span>Settings</span>
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+            <path
+              d="M480-361q-8 0-15-2.5t-13-8.5L268-556q-11-11-11-28t11-28q11-11 28-11t28 11l156 156 156-156q11-11 28-11t28 11q11 11 11 28t-11 28L508-372q-6 6-13 8.5t-15 2.5Z" />
+          </svg>
+        </button>
+        <ul class="sub-menu">
+          <div>
+            <li>
+              <a href="#">
+                <img class="icon-img" src="icons/New folder/photo.svg" alt="">
+                Manage Domain</a>
+            </li>
+            <li>
+              <a href="#">
+                <img class="icon-img" src="icons/New folder/earth-9.svg" alt="">
+                Access Countrys</a>
+            </li>
+            <li>
+              <a href="#">
+                <img class="icon-img" src="icons/New folder/credit-card.svg" alt="">
+                Convenience Fees</a>
+            </li>
+            <li>
+              <a href="#">
+                <img class="icon-img" src="icons/New folder/airplane.svg" alt="">
+                Manage Airline List</a>
+            </li>
+            <li>
+              <a href="#">
+                <img class="icon-img" src="icons/New folder/ticket-coupon.svg" alt="">
+                Promo Code</a>
+            </li>
+            <li>
+              <a href="#">
+                <img class="icon-img" src="icons/New folder/coin.svg" alt="">
+                Manage API</a>
+            </li>
+            <li>
+              <a href="#">
+                <img class="icon-img" src="icons/New folder/rupee-sign.svg" alt="">
+                Currency Conversion</a>
+            </li>
+            <li>
+              <a href="#">
+                <img class="icon-img" src="icons/New folder/man-working-on-a-laptop-from-side-view.png" alt="">
+                Event Log</a>
+            </li>
+            <li>
+              <a href="#">
+                <img class="icon-img" src="icons/New folder/graphic-design.png" alt="">
+                Apperance</a>
+            </li>
+            <li>
+              <a href="#">
+                <img class="icon-img" src="icons/New folder/social-network-brand.svg" alt="">
+                Social Login</a>
+            </li>
+            <li>
+              <a href="#">
+                <img class="icon-img" src="icons/New folder/event-badged-1.svg" alt="">
+                Live Event</a>
+            </li>
+          </div>
+        </ul>
+      </li>
+      <li>
+        <a href="profile.html">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed">
+            <path
+              d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-240v-32q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v32q0 33-23.5 56.5T720-160H240q-33 0-56.5-23.5T160-240Zm80 0h480v-32q0-11-5.5-20T700-306q-54-27-109-40.5T480-360q-56 0-111 13.5T260-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T560-640q0-33-23.5-56.5T480-720q-33 0-56.5 23.5T400-640q0 33 23.5 56.5T480-560Zm0-80Zm0 400Z" />
+          </svg>
+          <span>Profile</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+  <div class="dashboard-card ums">
+
+    <!-- HEADER -->
+    <div class="page-header">
+      <h3>User Management</h3>
+      <div class="d-flex gap-2" role="tablist">
+        <button class="btn-ui " data-bs-toggle="tab" data-bs-target="#createUserTab" type="button"
+          role="tab" aria-selected="false">
+          Create User
+        </button>
+
+        <button class="btn-ui active" data-bs-toggle="tab" data-bs-target="#userListTab" type="button" role="tab"
+          aria-selected="true">
+          User List
+        </button>
+      </div>
+
+    </div>
+    <div class="tab-content">
+      <div class="tab-pane fade " id="createUserTab" role="tabpanel">
+        
+<div class="dashboard-card">
+
+  <!-- USER PROFILE -->
+  <div class="form-section-title">User Profile</div>
+
+  <div class="row g-4">
+    <div class="col-md-6">
+      <label class="form-label">Title *</label>
+      <select class="form-select">
+        <option>Please Select</option>
+        <option>Mr</option>
+        <option>Mrs</option>
+      </select>
+    </div>
+
+    <div class="col-md-6"></div>
+
+    <div class="col-md-6">
+      <label class="form-label">First Name *</label>
+      <input class="form-control" placeholder="First Name">
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label">Last Name *</label>
+      <input class="form-control" placeholder="Last Name">
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label">Date Of Birth</label>
+      <input type="date" class="form-control">
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label">Country Code *</label>
+      <select class="form-select">
+        <option>India +91</option>
+      </select>
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label">Phone Number *</label>
+      <input class="form-control" placeholder="Phone Number">
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label">Address *</label>
+      <textarea class="form-control" rows="3"></textarea>
+    </div>
+
+    <div class="col-md-6 user-status-group">
+      <label class="form-label d-block">User Status *</label>
+      <div class="d-flex gap-3 mt-1">
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="status">
+          <label class="form-check-label">Inactive</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="status" checked>
+          <label class="form-check-label">Active</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOGIN DETAILS -->
+  <div class="form-section-title mt-5">Login Details</div>
+
+  <div class="row g-4">
+    <div class="col-md-6">
+      <label class="form-label">User Type *</label>
+      <select class="form-select">
+        <option>Please Select</option>
+        <option>Admin</option>
+        <option>User</option>
+      </select>
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label">Email ID *</label>
+      <input class="form-control" placeholder="Email ID">
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label">Password *</label>
+      <input type="password" class="form-control" placeholder="Password">
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label">Confirm Password *</label>
+      <input type="password" class="form-control" placeholder="Confirm Password">
+    </div>
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="form-actions">
+    <button class="btn-ui primary">Save</button>
+    <button class="btn-ui">Reset</button>
+  </div>
+
+</div>
+      </div>
+      <div class="tab-pane fade show active" id="userListTab" role="tabpanel">
+
+        <!-- SEARCH -->
+        <div class="row g-3">
+          <div class="col-md-4">
+            <input class="glass-input w-100" placeholder="Search Email">
+          </div>
+          <div class="col-md-4">
+            <input class="glass-input w-100" placeholder="Phone Number">
+          </div>
+          <div class="col-md-4">
+            <input type="date" class="glass-input w-100">
+          </div>
+        </div>
+
+        <!-- TABLE -->
+        <div class="table-wrap">
+          <table class="modern-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>User</th>
+                <th>Contact</th>
+                <th>Status</th>
+                <th class="text-end">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <tr>
+                <td>01</td>
+                <td>
+                  <strong>Customer</strong><br>
+                  <small class="text-muted">Member since Jan 2026</small>
+                </td>
+                <td>customer@mail.com</td>
+                <td><span class="status active">Active</span></td>
+                <td class="text-end">
+                  <button class="icon-btn"><i class="fa fa-pen"></i></button>
+                </td>
+              </tr>
+
+              <tr>
+                <td>02</td>
+                <td>
+                  <strong>Mr Pawan</strong><br>
+                  <small class="text-muted">India</small>
+                </td>
+                <td>+91 7842424428</td>
+                <td><span class="status inactive">Inctive</span></td>
+                <td class="text-end">
+                  <button class="icon-btn"><i class="fa fa-pen"></i></button>
+                </td>
+              </tr>
+              <tr>
+                <td>03</td>
+                <td>
+                  <strong>Mr Pawan</strong><br>
+                  <small class="text-muted">India</small>
+                </td>
+                <td>+91 7842424428</td>
+                <td><span class="status active">Active</span></td>
+                <td class="text-end">
+                  <button class="icon-btn"><i class="fa fa-pen"></i></button>
+                </td>
+              </tr>
+              <tr>
+                <td>04</td>
+                <td>
+                  <strong>Mr Pawan</strong><br>
+                  <small class="text-muted">India</small>
+                </td>
+                <td>+91 7842424428</td>
+                <td><span class="status active">Active</span></td>
+                <td class="text-end">
+                  <button class="icon-btn"><i class="fa fa-pen"></i></button>
+                </td>
+              </tr>
+              <tr>
+                <td>05</td>
+                <td>
+                  <strong>Mr Pawan</strong><br>
+                  <small class="text-muted">India</small>
+                </td>
+                <td>+91 7842424428</td>
+                <td><span class="status active">Active</span></td>
+                <td class="text-end">
+                  <button class="icon-btn"><i class="fa fa-pen"></i></button>
+                </td>
+              </tr>
+              <tr>
+                <td>06</td>
+                <td>
+                  <strong>Mr Pawan</strong><br>
+                  <small class="text-muted">India</small>
+                </td>
+                <td>+91 7842424428</td>
+                <td><span class="status active">Active</span></td>
+                <td class="text-end">
+                  <button class="icon-btn"><i class="fa fa-pen"></i></button>
+                </td>
+              </tr>
+              <tr>
+                <td>07</td>
+                <td>
+                  <strong>Mr Pawan</strong><br>
+                  <small class="text-muted">India</small>
+                </td>
+                <td>+91 7842424428</td>
+                <td><span class="status active">Active</span></td>
+                <td class="text-end">
+                  <button class="icon-btn"><i class="fa fa-pen"></i></button>
+                </td>
+              </tr>
+              <tr>
+                <td>08</td>
+                <td>
+                  <strong>Mr Pawan</strong><br>
+                  <small class="text-muted">India</small>
+                </td>
+                <td>+91 7842424428</td>
+                <td><span class="status active">Active</span></td>
+                <td class="text-end">
+                  <button class="icon-btn"><i class="fa fa-pen"></i></button>
+                </td>
+              </tr>
+              <tr>
+                <td>09</td>
+                <td>
+                  <strong>Mr Pawan</strong><br>
+                  <small class="text-muted">India</small>
+                </td>
+                <td>+91 7842424428</td>
+                <td><span class="status active">Active</span></td>
+                <td class="text-end">
+                  <button class="icon-btn"><i class="fa fa-pen"></i></button>
+                </td>
+              </tr>
+              <tr>
+                <td>10</td>
+                <td>
+                  <strong>Mr Pawan</strong><br>
+                  <small class="text-muted">India</small>
+                </td>
+                <td>+91 7842424428</td>
+                <td><span class="status active">Active</span></td>
+                <td class="text-end">
+                  <button class="icon-btn"><i class="fa fa-pen"></i></button>
+                </td>
+              </tr>
+              <tr>
+                <td>11</td>
+                <td>
+                  <strong>Mr Pawan</strong><br>
+                  <small class="text-muted">India</small>
+                </td>
+                <td>+91 7842424428</td>
+                <td><span class="status active">Active</span></td>
+                <td class="text-end">
+                  <button class="icon-btn"><i class="fa fa-pen"></i></button>
+                </td>
+              </tr>
+              <tr>
+                <td>12</td>
+                <td>
+                  <strong>Mr Pawan</strong><br>
+                  <small class="text-muted">India</small>
+                </td>
+                <td>+91 7842424428</td>
+                <td><span class="status active">Active</span></td>
+                <td class="text-end">
+                  <button class="icon-btn"><i class="fa fa-pen"></i></button>
+                </td>
+              </tr>
+              <tr>
+                <td>13</td>
+                <td>
+                  <strong>Mr Pawan</strong><br>
+                  <small class="text-muted">India</small>
+                </td>
+                <td>+91 7842424428</td>
+                <td><span class="status active">Active</span></td>
+                <td class="text-end">
+                  <button class="icon-btn"><i class="fa fa-pen"></i></button>
+                </td>
+              </tr>
+              <tr>
+                <td>14</td>
+                <td>
+                  <strong>Mr Pawan</strong><br>
+                  <small class="text-muted">India</small>
+                </td>
+                <td>+91 7842424428</td>
+                <td><span class="status active">Active</span></td>
+                <td class="text-end">
+                  <button class="icon-btn"><i class="fa fa-pen"></i></button>
+                </td>
+              </tr>
+              <tr>
+                <td>15</td>
+                <td>
+                  <strong>Mr Pawan</strong><br>
+                  <small class="text-muted">India</small>
+                </td>
+                <td>+91 7842424428</td>
+                <td><span class="status active">Active</span></td>
+                <td class="text-end">
+                  <button class="icon-btn"><i class="fa fa-pen"></i></button>
+                </td>
+              </tr>
+              <tr>
+                <td>16</td>
+                <td>
+                  <strong>Mr Pawan</strong><br>
+                  <small class="text-muted">India</small>
+                </td>
+                <td>+91 7842424428</td>
+                <td><span class="status active">Active</span></td>
+                <td class="text-end">
+                  <button class="icon-btn"><i class="fa fa-pen"></i></button>
+                </td>
+              </tr>
+              <tr>
+                <td>17</td>
+                <td>
+                  <strong>Mr Pawan</strong><br>
+                  <small class="text-muted">India</small>
+                </td>
+                <td>+91 7842424428</td>
+                <td><span class="status active">Active</span></td>
+                <td class="text-end">
+                  <button class="icon-btn"><i class="fa fa-pen"></i></button>
+                </td>
+              </tr>
+              <tr>
+                <td>18</td>
+                <td>
+                  <strong>Mr Pawan</strong><br>
+                  <small class="text-muted">India</small>
+                </td>
+                <td>+91 7842424428</td>
+                <td><span class="status active">Active</span></td>
+                <td class="text-end">
+                  <button class="icon-btn"><i class="fa fa-pen"></i></button>
+                </td>
+              </tr>
+              <tr>
+                <td>19</td>
+                <td>
+                  <strong>Mr Pawan</strong><br>
+                  <small class="text-muted">India</small>
+                </td>
+                <td>+91 7842424428</td>
+                <td><span class="status active">Active</span></td>
+                <td class="text-end">
+                  <button class="icon-btn"><i class="fa fa-pen"></i></button>
+                </td>
+              </tr>
+              <tr>
+                <td>20</td>
+                <td>
+                  <strong>Mr Pawan</strong><br>
+                  <small class="text-muted">India</small>
+                </td>
+                <td>+91 7842424428</td>
+                <td><span class="status active">Active</span></td>
+                <td class="text-end">
+                  <button class="icon-btn"><i class="fa fa-pen"></i></button>
+                </td>
+              </tr>
+              <tr>
+                <td>21</td>
+                <td>
+                  <strong>Mr Pawan</strong><br>
+                  <small class="text-muted">India</small>
+                </td>
+                <td>+91 7842424428</td>
+                <td><span class="status active">Active</span></td>
+                <td class="text-end">
+                  <button class="icon-btn"><i class="fa fa-pen"></i></button>
+                </td>
+              </tr>
+              <tr>
+                <td>22</td>
+                <td>
+                  <strong>Mr Pawan</strong><br>
+                  <small class="text-muted">India</small>
+                </td>
+                <td>+91 7842424428</td>
+                <td><span class="status active">Active</span></td>
+                <td class="text-end">
+                  <button class="icon-btn"><i class="fa fa-pen"></i></button>
+                </td>
+              </tr>
+              <tr>
+                <td>22</td>
+                <td>
+                  <strong>Mr Pawan</strong><br>
+                  <small class="text-muted">India</small>
+                </td>
+                <td>+91 7842424428</td>
+                <td><span class="status active">Active</span></td>
+                <td class="text-end">
+                  <button class="icon-btn"><i class="fa fa-pen"></i></button>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+        <!-- PAGINATION -->
+        <!-- <div class="pagination-ui">
+    <span class="active">1</span>
+    <span>2</span>
+    <span>3</span>
+    <span>Next</span>
+  </div> -->
+        <div class="pagination-ui" id="pagination"></div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* Glow follow cursor */
+    document.querySelectorAll('.dashboard-card').forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const r = card.getBoundingClientRect();
+        card.style.setProperty('--x', e.clientX - r.left + 'px');
+        card.style.setProperty('--y', e.clientY - r.top + 'px');
+      })
+    });
+
+    /* GSAP entry */
+    gsap.from(".dashboard-card", {
+      y: 80,
+      opacity: 0,
+      duration: 1.2,
+      ease: "power4.out"
+    });
+  </script>
+
+  <!-- pagination script here  -->
+  <script>
+    const rowsPerPage = 10;
+    const tableBody = document.querySelector(".modern-table tbody");
+    const rows = Array.from(tableBody.querySelectorAll("tr"));
+    const pagination = document.getElementById("pagination");
+
+    let currentPage = 1;
+    const totalPages = Math.ceil(rows.length / rowsPerPage);
+
+    function showPage(page) {
+      currentPage = page;
+
+      // Hide all rows
+      rows.forEach(row => row.style.display = "none");
+
+      // Show only 10 rows
+      const start = (page - 1) * rowsPerPage;
+      const end = start + rowsPerPage;
+
+      rows.slice(start, end).forEach(row => {
+        row.style.display = "";
+      });
+
+      renderPagination();
+    }
+
+    function renderPagination() {
+      pagination.innerHTML = "";
+
+      // Prev
+      const prev = document.createElement("span");
+      prev.innerText = "Prev";
+      prev.onclick = () => currentPage > 1 && showPage(currentPage - 1);
+      pagination.appendChild(prev);
+
+      // Page Numbers
+      for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement("span");
+        btn.innerText = i;
+        if (i === currentPage) btn.classList.add("active");
+        btn.onclick = () => showPage(i);
+        pagination.appendChild(btn);
+      }
+
+      // Next
+      const next = document.createElement("span");
+      next.innerText = "Next";
+      next.onclick = () => currentPage < totalPages && showPage(currentPage + 1);
+      pagination.appendChild(next);
+    }
+
+    // Init
+    showPage(1);
+  </script>
+  <script>
+  const tabButtons = document.querySelectorAll('[data-bs-toggle="tab"]');
+
+  tabButtons.forEach(btn => {
+    btn.addEventListener('shown.bs.tab', () => {
+      tabButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

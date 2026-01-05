@@ -108,7 +108,11 @@
       border-radius: 14px;
       padding: 10px 14px;
     }
-
+    .glass-input:focus {
+       border-color: var(--accent) !important;
+    box-shadow: 0 0 0 3px rgba(94, 99, 255, .25);
+      outline: none;
+    }
     .glass-input::placeholder {
       color: #9ca3af
     }
@@ -218,6 +222,128 @@
   background: linear-gradient(135deg, #5e63ff, #38bdf8);
   border: none;
 }
+
+/* create user sections  */
+.dashboard-card{
+  background-color: #343a49;
+  backdrop-filter:blur(18px);
+  border-radius:24px;
+  padding:30px;
+  border:1px solid var(--border);
+  box-shadow:0 30px 80px rgba(0,0,0,.6);
+}
+.dashboard-card:hover{
+/* background:var(--card);
+transition: .7s ease-in; */
+}
+/* Section Header */
+.form-section-title{
+  background:linear-gradient(135deg,#5e63ff,#38bdf8);
+  color:#fff;
+  padding:12px 18px;
+  border-radius:14px;
+  font-weight:600;
+  margin-bottom:24px;
+}
+
+/* Labels */
+.form-label{
+  font-size:13px;
+  font-weight:500;
+  color:#c7cbe0;
+}
+
+/* Inputs */
+.form-control,
+.form-select,
+textarea{
+  background:rgba(255,255,255,.06)!important;
+  border:1px solid var(--border)!important;
+  color:var(--text)!important;
+  border-radius:14px!important;
+  padding:10px 14px;
+}
+
+.form-control::placeholder{
+  color:#9ca3af;
+}
+
+.form-control:focus,
+.form-select:focus,
+textarea:focus{
+  border-color:var(--accent)!important;
+  box-shadow:0 0 0 3px rgba(94,99,255,.25);
+}
+
+/* Radio */
+.form-check-input{
+  background-color:transparent;
+  border:1px solid var(--border);
+}
+.form-check-input:checked{
+  background-color:var(--accent);
+  border-color:var(--accent);
+}
+.form-actions{
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  margin-top:30px;
+}
+
+
+/* ===== FORM GRID ALIGNMENT FIX ===== */
+.row.g-4 {
+  align-items: flex-end;
+}
+
+/* Label spacing consistency */
+.form-label {
+  margin-bottom: 6px;
+  display: block;
+}
+
+/* Equal input height */
+.form-control,
+.form-select {
+  height: 44px;
+}
+
+/* Address textarea alignment */
+textarea.form-control {
+  height: 44px;
+  resize: none;
+}
+
+/* Section spacing */
+.form-section-title {
+  margin-top: 10px;
+}
+
+/* Radio alignment */
+.form-check {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-check-label {
+  margin-bottom: 0;
+}
+
+/* User status alignment */
+.user-status-group {
+  margin-top: 6px;
+}
+
+/* Button alignment polish */
+.form-actions {
+  padding-top: 10px;
+}
+textarea.form-control::-webkit-scrollbar {
+  display: none;
+}
+
   </style>
 </head>
 
@@ -493,7 +619,107 @@
     </div>
     <div class="tab-content">
       <div class="tab-pane fade " id="createUserTab" role="tabpanel">
-        <!-- Create User form will come here later -->  
+        
+<div class="dashboard-card">
+
+  <!-- USER PROFILE -->
+  <div class="form-section-title">User Profile</div>
+
+  <div class="row g-4">
+    <div class="col-md-6">
+      <label class="form-label">Title *</label>
+      <select class="form-select">
+        <option>Please Select</option>
+        <option>Mr</option>
+        <option>Mrs</option>
+      </select>
+    </div>
+
+    <div class="col-md-6"></div>
+
+    <div class="col-md-6">
+      <label class="form-label">First Name *</label>
+      <input class="form-control" placeholder="First Name">
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label">Last Name *</label>
+      <input class="form-control" placeholder="Last Name">
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label">Date Of Birth</label>
+      <input type="date" class="form-control">
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label">Country Code *</label>
+      <select class="form-select">
+        <option>India +91</option>
+      </select>
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label">Phone Number *</label>
+      <input class="form-control" placeholder="Phone Number">
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label">Address *</label>
+      <textarea class="form-control" rows="3"></textarea>
+    </div>
+
+    <div class="col-md-6 user-status-group">
+      <label class="form-label d-block">User Status *</label>
+      <div class="d-flex gap-3 mt-1">
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="status">
+          <label class="form-check-label">Inactive</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="status" checked>
+          <label class="form-check-label">Active</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOGIN DETAILS -->
+  <div class="form-section-title mt-5">Login Details</div>
+
+  <div class="row g-4">
+    <div class="col-md-6">
+      <label class="form-label">User Type *</label>
+      <select class="form-select">
+        <option>Please Select</option>
+        <option>Admin</option>
+        <option>User</option>
+      </select>
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label">Email ID *</label>
+      <input class="form-control" placeholder="Email ID">
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label">Password *</label>
+      <input type="password" class="form-control" placeholder="Password">
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label">Confirm Password *</label>
+      <input type="password" class="form-control" placeholder="Confirm Password">
+    </div>
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="form-actions">
+    <button class="btn-ui primary">Save</button>
+    <button class="btn-ui">Reset</button>
+  </div>
+
+</div>
       </div>
       <div class="tab-pane fade show active" id="userListTab" role="tabpanel">
 
@@ -531,7 +757,7 @@
                   <small class="text-muted">Member since Jan 2026</small>
                 </td>
                 <td>customer@mail.com</td>
-                <td><span class="status active">Active</span></td>
+                <td><span class="status inactive">Inactive</span></td>
                 <td class="text-end">
                   <button class="icon-btn"><i class="fa fa-pen"></i></button>
                 </td>
@@ -556,7 +782,7 @@
                   <small class="text-muted">India</small>
                 </td>
                 <td>+91 7842424428</td>
-                <td><span class="status active">Active</span></td>
+                <td><span class="status inactive">Inactive</span></td>
                 <td class="text-end">
                   <button class="icon-btn"><i class="fa fa-pen"></i></button>
                 </td>
@@ -568,7 +794,7 @@
                   <small class="text-muted">India</small>
                 </td>
                 <td>+91 7842424428</td>
-                <td><span class="status active">Active</span></td>
+                <td><span class="status inactive">Inactive</span></td>
                 <td class="text-end">
                   <button class="icon-btn"><i class="fa fa-pen"></i></button>
                 </td>
@@ -580,7 +806,7 @@
                   <small class="text-muted">India</small>
                 </td>
                 <td>+91 7842424428</td>
-                <td><span class="status active">Active</span></td>
+                <td><span class="status inactive">Inactive</span></td>
                 <td class="text-end">
                   <button class="icon-btn"><i class="fa fa-pen"></i></button>
                 </td>
@@ -592,7 +818,7 @@
                   <small class="text-muted">India</small>
                 </td>
                 <td>+91 7842424428</td>
-                <td><span class="status active">Active</span></td>
+                <td><span class="status inactive">Inactive</span></td>
                 <td class="text-end">
                   <button class="icon-btn"><i class="fa fa-pen"></i></button>
                 </td>
@@ -604,7 +830,7 @@
                   <small class="text-muted">India</small>
                 </td>
                 <td>+91 7842424428</td>
-                <td><span class="status active">Active</span></td>
+                <td><span class="status inactive">Inactive</span></td>
                 <td class="text-end">
                   <button class="icon-btn"><i class="fa fa-pen"></i></button>
                 </td>
@@ -616,7 +842,7 @@
                   <small class="text-muted">India</small>
                 </td>
                 <td>+91 7842424428</td>
-                <td><span class="status active">Active</span></td>
+                <td><span class="status inactive">Inactive</span></td>
                 <td class="text-end">
                   <button class="icon-btn"><i class="fa fa-pen"></i></button>
                 </td>
@@ -628,7 +854,7 @@
                   <small class="text-muted">India</small>
                 </td>
                 <td>+91 7842424428</td>
-                <td><span class="status active">Active</span></td>
+                <td><span class="status inactive">Inactive</span></td>
                 <td class="text-end">
                   <button class="icon-btn"><i class="fa fa-pen"></i></button>
                 </td>
@@ -640,7 +866,7 @@
                   <small class="text-muted">India</small>
                 </td>
                 <td>+91 7842424428</td>
-                <td><span class="status active">Active</span></td>
+                <td><span class="status inactive">Inactive</span></td>
                 <td class="text-end">
                   <button class="icon-btn"><i class="fa fa-pen"></i></button>
                 </td>
@@ -652,7 +878,7 @@
                   <small class="text-muted">India</small>
                 </td>
                 <td>+91 7842424428</td>
-                <td><span class="status active">Active</span></td>
+                <td><span class="status inactive">Inactive</span></td>
                 <td class="text-end">
                   <button class="icon-btn"><i class="fa fa-pen"></i></button>
                 </td>
@@ -664,139 +890,7 @@
                   <small class="text-muted">India</small>
                 </td>
                 <td>+91 7842424428</td>
-                <td><span class="status active">Active</span></td>
-                <td class="text-end">
-                  <button class="icon-btn"><i class="fa fa-pen"></i></button>
-                </td>
-              </tr>
-              <tr>
-                <td>13</td>
-                <td>
-                  <strong>Mr Pawan</strong><br>
-                  <small class="text-muted">India</small>
-                </td>
-                <td>+91 7842424428</td>
-                <td><span class="status active">Active</span></td>
-                <td class="text-end">
-                  <button class="icon-btn"><i class="fa fa-pen"></i></button>
-                </td>
-              </tr>
-              <tr>
-                <td>14</td>
-                <td>
-                  <strong>Mr Pawan</strong><br>
-                  <small class="text-muted">India</small>
-                </td>
-                <td>+91 7842424428</td>
-                <td><span class="status active">Active</span></td>
-                <td class="text-end">
-                  <button class="icon-btn"><i class="fa fa-pen"></i></button>
-                </td>
-              </tr>
-              <tr>
-                <td>15</td>
-                <td>
-                  <strong>Mr Pawan</strong><br>
-                  <small class="text-muted">India</small>
-                </td>
-                <td>+91 7842424428</td>
-                <td><span class="status active">Active</span></td>
-                <td class="text-end">
-                  <button class="icon-btn"><i class="fa fa-pen"></i></button>
-                </td>
-              </tr>
-              <tr>
-                <td>16</td>
-                <td>
-                  <strong>Mr Pawan</strong><br>
-                  <small class="text-muted">India</small>
-                </td>
-                <td>+91 7842424428</td>
-                <td><span class="status active">Active</span></td>
-                <td class="text-end">
-                  <button class="icon-btn"><i class="fa fa-pen"></i></button>
-                </td>
-              </tr>
-              <tr>
-                <td>17</td>
-                <td>
-                  <strong>Mr Pawan</strong><br>
-                  <small class="text-muted">India</small>
-                </td>
-                <td>+91 7842424428</td>
-                <td><span class="status active">Active</span></td>
-                <td class="text-end">
-                  <button class="icon-btn"><i class="fa fa-pen"></i></button>
-                </td>
-              </tr>
-              <tr>
-                <td>18</td>
-                <td>
-                  <strong>Mr Pawan</strong><br>
-                  <small class="text-muted">India</small>
-                </td>
-                <td>+91 7842424428</td>
-                <td><span class="status active">Active</span></td>
-                <td class="text-end">
-                  <button class="icon-btn"><i class="fa fa-pen"></i></button>
-                </td>
-              </tr>
-              <tr>
-                <td>19</td>
-                <td>
-                  <strong>Mr Pawan</strong><br>
-                  <small class="text-muted">India</small>
-                </td>
-                <td>+91 7842424428</td>
-                <td><span class="status active">Active</span></td>
-                <td class="text-end">
-                  <button class="icon-btn"><i class="fa fa-pen"></i></button>
-                </td>
-              </tr>
-              <tr>
-                <td>20</td>
-                <td>
-                  <strong>Mr Pawan</strong><br>
-                  <small class="text-muted">India</small>
-                </td>
-                <td>+91 7842424428</td>
-                <td><span class="status active">Active</span></td>
-                <td class="text-end">
-                  <button class="icon-btn"><i class="fa fa-pen"></i></button>
-                </td>
-              </tr>
-              <tr>
-                <td>21</td>
-                <td>
-                  <strong>Mr Pawan</strong><br>
-                  <small class="text-muted">India</small>
-                </td>
-                <td>+91 7842424428</td>
-                <td><span class="status active">Active</span></td>
-                <td class="text-end">
-                  <button class="icon-btn"><i class="fa fa-pen"></i></button>
-                </td>
-              </tr>
-              <tr>
-                <td>22</td>
-                <td>
-                  <strong>Mr Pawan</strong><br>
-                  <small class="text-muted">India</small>
-                </td>
-                <td>+91 7842424428</td>
-                <td><span class="status active">Active</span></td>
-                <td class="text-end">
-                  <button class="icon-btn"><i class="fa fa-pen"></i></button>
-                </td>
-              </tr>
-              <tr>
-                <td>22</td>
-                <td>
-                  <strong>Mr Pawan</strong><br>
-                  <small class="text-muted">India</small>
-                </td>
-                <td>+91 7842424428</td>
-                <td><span class="status active">Active</span></td>
+                <td><span class="status active">Inactive</span></td>
                 <td class="text-end">
                   <button class="icon-btn"><i class="fa fa-pen"></i></button>
                 </td>
