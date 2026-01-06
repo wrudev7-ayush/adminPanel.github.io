@@ -603,3 +603,7 @@ main p {
 /* user here  */
 
 
+
+.pagination-ui span:hover{
+  border: 1px solid #5f63f6;
+}
