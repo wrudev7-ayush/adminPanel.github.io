@@ -100,9 +100,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!res.ok) {
           throw new Error(data.message || "Invalid email or password");
         }
-        return data;
-      })
-      .then(() => {
+        else{
         localStorage.setItem("loginEmail", email);
 
         loginFields.forEach(el => el.style.display = "none");
@@ -110,7 +108,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         formTitle.innerText = "Verify OTP";
         otpSection.style.display = "block";
+      }
+        return data;
       })
+  
       .catch(err => {
         showError(err.message);
       })
