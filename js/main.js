@@ -98,15 +98,11 @@ document.addEventListener("DOMContentLoaded", function () {
     .then(async (res) => {
       const data = await res.json();
 
-      // ❌ LOGIN FAILED → STAY ON LOGIN PAGE
+      
       if (!res.ok) {
         throw new Error(data.message || "Invalid email or password");
       }
-
-      // ✅ LOGIN SUCCESS
-      return data;
-    })
-    .then(() => {
+      else {
 
       // store email for OTP verification
       localStorage.setItem("loginEmail", email);
@@ -118,15 +114,14 @@ document.addEventListener("DOMContentLoaded", function () {
       // show OTP UI
       formTitle.innerText = "Verify OTP";
       otpSection.style.display = "block";
+      }
+  
+   
+
+      // ✅ LOGIN SUCCESS
+      return data;
     })
-    .catch(err => {
-      showError(err.message);
-    })
-    .finally(() => {
-      submitBtn.disabled = false;
-      submitBtn.innerText = "Login";
-    });
-  }
+    
 
   function showError(message) {
     errorBox.innerText = message;
