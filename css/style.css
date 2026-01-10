@@ -607,3 +607,25 @@ main p {
 .pagination-ui span:hover{
   border: 1px solid #5f63f6;
 }
+/* ===== USER → B2B/B2C NESTED MENU ===== */
+#sidebar .sub-menu.nested a {
+  padding-left: 3.5em;
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+#sidebar .sub-menu.nested a:hover {
+  background: rgba(94,99,255,0.12);
+  opacity: 1;
+}
+
+.sub-dropdown {
+  padding-left: 1.5em;
+}
+
+
+/* here  */
+#sidebar .sub-menu.nested a:hover{
+  background: linear-gradient(135deg, #2563eb, #38bdf8);
+    box-shadow: 0 0 30px rgba(56, 189, 248, .6);
+}

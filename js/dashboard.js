@@ -201,4 +201,36 @@ document.querySelectorAll(".heat").forEach(cell => {
   cell.title = `Retention: ${value}%`;
 });
 
+// jwt authentication here 
 
+
+// BLOCK ACCESS IF NOT LOGGED IN
+// if (!localStorage.getItem("token")) {
+//   window.location.href = "login.html";
+// }
+
+// CALL PROTECTED API
+// fetch("http://localhost:8080/admin/auth/verify-otp", {
+//   headers: {
+//     Authorization: "Bearer " + localStorage.getItem("token")
+//   }
+// })
+// .then(res => {
+//   if (res.status === 401) {
+//     localStorage.removeItem("token");
+//     window.location.href = "login.html";
+//   }
+//   return res.json();
+// })
+// .then(data => {
+//   console.log("Users API Response:", data);
+// })
+// .catch(err => console.error(err));
+
+
+// BLOCK ACCESS IF NOT LOGGED IN
+if (!localStorage.getItem("token")) {
+  window.location.href = "login-signup.html";
+}
+
+console.log("Logged in successfully. Token:", localStorage.getItem("token"));

@@ -216,3 +216,104 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
 });
+
+
+// // LOGIN BUTTON CLICK
+// document.getElementById("submitBtn").addEventListener("click", login);
+
+// function login() {
+//   const email = document.querySelector('input[name="email"]').value;
+//   const password = document.querySelector('input[name="pass"]').value;
+
+//   if (!email || !password) {
+//     alert("Email and password are required");
+//     return;
+//   }
+
+//   fetch("http://localhost:8080/admin/auth/login", {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json"
+//     },
+//     body: JSON.stringify({
+//       email: email,
+//       password: password
+//     })
+//   })
+//   .then(res => {
+//     if (res.status === 401) {
+//       throw new Error("Invalid credentials");
+//     }
+//     return res.json();
+//   })
+//   .then(data => {
+//     console.log("Login Response:", data);
+
+//     localStorage.setItem("token", data.token);
+
+//     window.location.href = "dashboard.html";
+//   })
+//   .catch(err => alert(err.message));
+// }
+
+// LOGIN authentication here ayush
+
+document.getElementById("submitBtn").addEventListener("click", login);
+
+function login() {
+  const email = document.querySelector('input[name="email"]').value;
+  const password = document.querySelector('input[name="pass"]').value;
+
+  if (!email || !password) {
+    alert("Email and password are required");
+    return;
+  }
+
+  fetch("http://localhost:8080/admin/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password })
+  })
+  .then(res => res.json())
+  .then(data => {
+    console.log("Login response:", data);
+
+    // save email for OTP
+    localStorage.setItem("loginEmail", email);
+
+    // show OTP 
+    document.getElementById("otpSection").style.display = "block";
+  })
+  .catch(() => alert("Login failed"));
+}
+
+
+
+document.getElementById("verifyOtpBtn").addEventListener("click", verifyOtp);
+
+function verifyOtp() {
+  let otp = "";
+  document.querySelectorAll(".otp-box").forEach(i => otp += i.value);
+
+  fetch("http://localhost:8080/admin/auth/verify-otp", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      email: localStorage.getItem("loginEmail"),
+      otp: otp
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    console.log("Verify OTP response:", data);
+
+    // SAVE JWT (ONLY HERE)
+    localStorage.setItem("token", data.token);
+
+    localStorage.removeItem("loginEmail");
+
+    window.location.href = "dashboard.html";
+  })
+  .catch(() => alert("OTP verification failed"));
+}
+
