@@ -222,11 +222,16 @@ document.addEventListener("DOMContentLoaded", function () {
 document.getElementById("submitBtn").addEventListener("click", login);
 
 function login() {
-  const email = document.querySelector('input[name="email"]').value;
-  const password = document.querySelector('input[name="pass"]').value;
+  const email = document.querySelector('input[name="email"]').value.trim();
+  const password = document.querySelector('input[name="pass"]').value.trim();
+  const errorBox = document.getElementById("loginError");
+
+  errorBox.style.display = "none";
+  errorBox.innerText = "";
 
   if (!email || !password) {
-    alert("Email and password are required");
+    errorBox.innerText = "Email and password are required";
+    errorBox.style.display = "block";
     return;
   }
 
@@ -239,32 +244,31 @@ function login() {
   .then(data => {
     console.log("Login response:", data);
 
-    //  LOGIN FAILED → STAY ON SAME PAGE
-    if (data.success === false) {
-      alert(data.message || "Invalid email or password");
+    // ❌ LOGIN FAILED
+    if (!data.success) {
+      errorBox.innerText = data.message || "Invalid email or password";
+      errorBox.style.display = "block";
       return;
     }
 
-    // LOGIN SUCCESS → MOVE TO OTP PAGE
-    if (data.success === true) {
-      localStorage.setItem("loginEmail", email);
+    // ✅ LOGIN SUCCESS → MOVE TO OTP
+    localStorage.setItem("loginEmail", email);
 
-      // hide login fields
-      document.querySelectorAll(".login-field").forEach(el => {
-        el.style.display = "none";
-      });
+    document.querySelectorAll(".login-field").forEach(el => {
+      el.style.display = "none";
+    });
 
-      document.getElementById("submitBtn").style.display = "none";
+    document.getElementById("submitBtn").style.display = "none";
 
-      // show OTP section
-      document.getElementById("formTitle").innerText = "Verify OTP";
-      document.getElementById("otpSection").style.display = "block";
-    }
+    document.getElementById("formTitle").innerText = "Verify OTP";
+    document.getElementById("otpSection").style.display = "block";
   })
   .catch(() => {
-    alert("Server error. Please try again.");
+    errorBox.innerText = "Server error. Please try again.";
+    errorBox.style.display = "block";
   });
 }
+
 
 
 document.getElementById("verifyOtpBtn").addEventListener("click", verifyOtp);
