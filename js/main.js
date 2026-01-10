@@ -218,46 +218,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-// // LOGIN BUTTON CLICK
-// document.getElementById("submitBtn").addEventListener("click", login);
-
-// function login() {
-//   const email = document.querySelector('input[name="email"]').value;
-//   const password = document.querySelector('input[name="pass"]').value;
-
-//   if (!email || !password) {
-//     alert("Email and password are required");
-//     return;
-//   }
-
-//   fetch("http://localhost:8080/admin/auth/login", {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json"
-//     },
-//     body: JSON.stringify({
-//       email: email,
-//       password: password
-//     })
-//   })
-//   .then(res => {
-//     if (res.status === 401) {
-//       throw new Error("Invalid credentials");
-//     }
-//     return res.json();
-//   })
-//   .then(data => {
-//     console.log("Login Response:", data);
-
-//     localStorage.setItem("token", data.token);
-
-//     window.location.href = "dashboard.html";
-//   })
-//   .catch(err => alert(err.message));
-// }
-
 // LOGIN authentication here ayush
-
 document.getElementById("submitBtn").addEventListener("click", login);
 
 function login() {
@@ -278,22 +239,49 @@ function login() {
   .then(data => {
     console.log("Login response:", data);
 
-    // save email for OTP
-    localStorage.setItem("loginEmail", email);
+    //  LOGIN FAILED → STAY ON SAME PAGE
+    if (data.success === false) {
+      alert(data.message || "Invalid email or password");
+      return;
+    }
 
-    // show OTP 
-    document.getElementById("otpSection").style.display = "block";
+    // LOGIN SUCCESS → MOVE TO OTP PAGE
+    if (data.success === true) {
+      localStorage.setItem("loginEmail", email);
+
+      // hide login fields
+      document.querySelectorAll(".login-field").forEach(el => {
+        el.style.display = "none";
+      });
+
+      document.getElementById("submitBtn").style.display = "none";
+
+      // show OTP section
+      document.getElementById("formTitle").innerText = "Verify OTP";
+      document.getElementById("otpSection").style.display = "block";
+    }
   })
-  .catch(() => alert("Login failed"));
+  .catch(() => {
+    alert("Server error. Please try again.");
+  });
 }
-
 
 
 document.getElementById("verifyOtpBtn").addEventListener("click", verifyOtp);
 
 function verifyOtp() {
   let otp = "";
-  document.querySelectorAll(".otp-box").forEach(i => otp += i.value);
+  const otpBoxes = document.querySelectorAll(".otp-box");
+
+  otpBoxes.forEach(i => otp += i.value);
+
+  if (otp.length !== 6) {
+    alert("Please enter complete OTP");
+    return;
+  }
+
+  // reset styles
+  otpBoxes.forEach(b => b.classList.remove("otp-error", "otp-success"));
 
   fetch("http://localhost:8080/admin/auth/verify-otp", {
     method: "POST",
@@ -307,13 +295,43 @@ function verifyOtp() {
   .then(data => {
     console.log("Verify OTP response:", data);
 
-    // SAVE JWT (ONLY HERE)
-    localStorage.setItem("token", data.token);
+    /**
+     * EXPECTED API RESPONSE (example)
+     * ------------------------------
+     * SUCCESS:
+     * { success: true, token: "jwt_here" }
+     *
+     * FAILURE:
+     * { success: false, message: "Invalid OTP" }
+     */
 
-    localStorage.removeItem("loginEmail");
+    if (data.success === true && data.token) {
 
-    window.location.href = "dashboard.html";
+      //  OTP CORRECT
+      otpBoxes.forEach(b => b.classList.add("otp-success"));
+
+      localStorage.setItem("token", data.token);
+      localStorage.removeItem("loginEmail");
+
+      setTimeout(() => {
+        window.location.href = "dashboard.html";
+      }, 800);
+
+    } else {
+
+      //  OTP WRONG
+      otpBoxes.forEach(b => b.classList.add("otp-error"));
+
+      setTimeout(() => {
+        otpBoxes.forEach(b => {
+          b.value = "";
+          b.classList.remove("otp-error");
+        });
+        otpBoxes[0].focus();
+      }, 700);
+    }
   })
-  .catch(() => alert("OTP verification failed"));
+  .catch(() => {
+    alert("OTP verification failed");
+  });
 }
-
