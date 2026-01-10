@@ -92,7 +92,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     fetch("http://localhost:8080/admin/auth/login", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "text/plain" },
       body: JSON.stringify({ email, password })
     })
     .then(async (res) => {
