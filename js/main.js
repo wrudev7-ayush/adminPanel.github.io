@@ -61,14 +61,12 @@
   }
 })(jQuery);
 
-
 document.addEventListener("DOMContentLoaded", function () {
 
   const submitBtn = document.getElementById("submitBtn");
   const errorBox = document.getElementById("loginError");
   const otpSection = document.getElementById("otpSection");
   const formTitle = document.getElementById("formTitle");
-
   const loginFields = document.querySelectorAll(".login-field");
 
   submitBtn.addEventListener("click", login);
@@ -79,9 +77,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const email = document.querySelector('input[name="email"]').value.trim();
     const password = document.querySelector('input[name="pass"]').value.trim();
 
+    // reset error
     errorBox.style.display = "none";
     errorBox.innerText = "";
 
+    // validation
     if (!email || !password) {
       showError("Email and password are required");
       return;
@@ -95,37 +95,47 @@ document.addEventListener("DOMContentLoaded", function () {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password })
     })
-      .then(async (res) => {
-        const data = await res.json();
-        if (!res.ok) {
-          throw new Error(data.message || "Invalid email or password");
-        }
-        else{
-        localStorage.setItem("loginEmail", email);
+    .then(async (res) => {
+      const data = await res.json();
 
-        loginFields.forEach(el => el.style.display = "none");
-        submitBtn.style.display = "none";
-
-        formTitle.innerText = "Verify OTP";
-        otpSection.style.display = "block";
+      // ❌ LOGIN FAILED → STAY ON LOGIN PAGE
+      if (!res.ok) {
+        throw new Error(data.message || "Invalid email or password");
       }
-        return data;
-      })
-  
-      .catch(err => {
-        showError(err.message);
-      })
-      .finally(() => {
-        submitBtn.disabled = false;
-        submitBtn.innerText = "Login";
-      });
+
+      // ✅ LOGIN SUCCESS
+      return data;
+    })
+    .then(() => {
+
+      // store email for OTP verification
+      localStorage.setItem("loginEmail", email);
+
+      // hide login UI
+      loginFields.forEach(el => el.style.display = "none");
+      submitBtn.style.display = "none";
+
+      // show OTP UI
+      formTitle.innerText = "Verify OTP";
+      otpSection.style.display = "block";
+    })
+    .catch(err => {
+      showError(err.message);
+    })
+    .finally(() => {
+      submitBtn.disabled = false;
+      submitBtn.innerText = "Login";
+    });
   }
 
   function showError(message) {
     errorBox.innerText = message;
     errorBox.style.display = "block";
   }
+
 });
+
+
 
 document.addEventListener("DOMContentLoaded", function () {
 
