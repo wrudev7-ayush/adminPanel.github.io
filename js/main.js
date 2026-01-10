@@ -120,7 +120,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // ✅ LOGIN SUCCESS
       return data;
+    }).catch(err => {
+      showError(err.message);
     })
+    .finally(() => {
+      submitBtn.disabled = false;
+      submitBtn.innerText = "Login";
+    });
+  }
     
 
   function showError(message) {
