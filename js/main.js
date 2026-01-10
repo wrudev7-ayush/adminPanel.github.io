@@ -97,7 +97,7 @@ document.addEventListener("DOMContentLoaded", function () {
     })
       .then(async (res) => {
         const data = await res.json();
-        if (!res.ok || !data.success) {
+        if (!res.ok) {
           throw new Error(data.message || "Invalid email or password");
         }
         return data;
