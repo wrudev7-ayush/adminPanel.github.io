@@ -202,13 +202,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-
 document.addEventListener("DOMContentLoaded", function () {
 
   const otpBoxes = document.querySelectorAll(".otp-box");
   const verifyOtpBtn = document.getElementById("verifyOtpBtn");
 
-  // Auto move
   otpBoxes.forEach((box, index) => {
     box.addEventListener("input", () => {
       if (box.value && index < otpBoxes.length - 1) {
@@ -236,8 +234,6 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    otpBoxes.forEach(b => b.classList.remove("otp-error", "otp-success"));
-
     fetch("http://localhost:8080/admin/auth/verify-otp", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -246,101 +242,21 @@ document.addEventListener("DOMContentLoaded", function () {
         otp: otp
       })
     })
-      .then(res => res.json())
-      .then(data => {
-        console.log(data);
-        if (typeof data.token === "string" && data.token.trim().length > 0) {
-          otpBoxes.forEach(b => b.classList.add("otp-success"));
-          localStorage.setItem("token", data.token);
-          localStorage.removeItem("loginEmail");
+    .then(res => res.json())
+    .then(data => {
+      console.log("OTP response:", data);
 
-          setTimeout(() => {
-            window.location.href = "dashboard.html";
-          }, 800);
-        } else {
-          throw new Error(data.message || "Invalid OTP");
-        }
-      })
-      .catch(err => {
-        otpBoxes.forEach(b => b.classList.add("otp-error"));
-        setTimeout(() => {
-          otpBoxes.forEach(b => {
-            b.value = "";
-            b.classList.remove("otp-error");
-          });
-          otpBoxes[0].focus();
-        }, 600);
-      });
-  }
-});
-
-
-document.addEventListener("DOMContentLoaded", function () {
-
-  const otpBoxes = document.querySelectorAll(".otp-box");
-  const verifyOtpBtn = document.getElementById("verifyOtpBtn");
-
-  // Auto move
-  otpBoxes.forEach((box, index) => {
-    box.addEventListener("input", () => {
-      if (box.value && index < otpBoxes.length - 1) {
-        otpBoxes[index + 1].focus();
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+        localStorage.removeItem("loginEmail");
+        window.location.href = "dashboard.html";
+      } else {
+        throw new Error("Invalid OTP");
       }
-    });
-
-    box.addEventListener("keydown", (e) => {
-      if (e.key === "Backspace" && !box.value && index > 0) {
-        otpBoxes[index - 1].focus();
-      }
-    });
-  });
-
-  verifyOtpBtn.addEventListener("click", verifyOtp);
-
-  function verifyOtp(e) {
-    e.preventDefault();
-
-    let otp = "";
-    otpBoxes.forEach(b => otp += b.value);
-
-    if (otp.length !== 6) {
-      alert("Please enter complete OTP");
-      return;
-    }
-
-    otpBoxes.forEach(b => b.classList.remove("otp-error", "otp-success"));
-
-    fetch("http://localhost:8080/admin/auth/verify-otp", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: localStorage.getItem("loginEmail"),
-        otp: otp
-      })
     })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success && data.token) {
-          otpBoxes.forEach(b => b.classList.add("otp-success"));
-          localStorage.setItem("token", data.token);
-          localStorage.removeItem("loginEmail");
-
-          setTimeout(() => {
-            window.location.href = "dashboard.html";
-          }, 800);
-        } else {
-          throw new Error(data.message || "Invalid OTP");
-        }
-      })
-      .catch(err => {
-        otpBoxes.forEach(b => b.classList.add("otp-error"));
-        setTimeout(() => {
-          otpBoxes.forEach(b => {
-            b.value = "";
-            b.classList.remove("otp-error");
-          });
-          otpBoxes[0].focus();
-        }, 600);
-      });
+    .catch(() => {
+      alert("Invalid OTP");
+    });
   }
 });
+
