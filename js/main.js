@@ -248,7 +248,8 @@ document.addEventListener("DOMContentLoaded", function () {
     })
       .then(res => res.json())
       .then(data => {
-        if (data.success && data.token) {
+        console.log(data);
+        if (typeof data.token === "string" && data.token.trim().length > 0) {
           otpBoxes.forEach(b => b.classList.add("otp-success"));
           localStorage.setItem("token", data.token);
           localStorage.removeItem("loginEmail");
