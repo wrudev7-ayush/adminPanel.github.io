@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Add Banner</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+<script src="https://unpkg.com/gsap@3.12.5/dist/gsap.min.js"></script>
+
+<!-- <link rel="stylesheet" href="style.css"> -->
+ <style>
+    body.admin-bg {
+  background: radial-gradient(circle at top, #1b2330, #0f172a);
+  color: #e5e7eb;
+  font-family: "Inter", sans-serif;
+}
+
+.page-title {
+  font-weight: 700;
+}
+
+/* Buttons */
+.btn-primary-soft {
+  background: linear-gradient(135deg, #5b7cfa, #6d9bff);
+  border: none;
+  color: #fff;
+  border-radius: 12px;
+  padding: 10px 18px;
+}
+
+.btn-success-soft {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  border: none;
+  color: #fff;
+  padding: 10px 26px;
+  border-radius: 12px;
+}
+
+.btn-danger-soft {
+  background: rgba(239,68,68,0.15);
+  color: #ef4444;
+  border-radius: 12px;
+  padding: 10px 26px;
+}
+
+/* Card */
+.admin-card {
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(18px);
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+}
+
+/* Inputs */
+.glass-input {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: #fff;
+  border-radius: 12px;
+}
+
+.glass-input::placeholder {
+  color: #9ca3af;
+}
+
+.glass-input:focus {
+  border-color: #6d9bff;
+  box-shadow: 0 0 0 2px rgba(109,155,255,0.25);
+}
+
+/* File Upload */
+.file-upload {
+  position: relative;
+}
+
+.file-upload input {
+  display: none;
+}
+
+.file-upload label {
+  display: block;
+  padding: 14px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.08);
+  text-align: center;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.file-upload label:hover {
+  background: rgba(255,255,255,0.15);
+}
+
+/* Status Toggle */
+.status-toggle {
+  display: flex;
+  gap: 12px;
+}
+
+.status-btn {
+  padding: 8px 20px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  border: none;
+  color: #9ca3af;
+}
+
+.status-btn.active {
+  background: rgba(34,197,94,0.2);
+  color: #22c55e;
+}
+
+ </style>
+</head>
+
+<body class="admin-bg">
+
+<div class="container py-5">
+
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="page-title">Manage Banners</h2>
+    <button class="btn btn-primary-soft">
+      <i class="bi bi-arrow-left"></i> Back
+    </button>
+  </div>
+
+  <!-- Form Card -->
+  <div class="admin-card form-card">
+
+    <h4 class="mb-4">Add Banner</h4>
+
+    <form class="row g-4">
+
+      <!-- Title -->
+      <div class="col-md-6">
+        <label class="form-label">Title</label>
+        <input type="text" class="form-control glass-input" placeholder="Banner title">
+      </div>
+
+      <!-- Order -->
+      <div class="col-md-6">
+        <label class="form-label">Order</label>
+        <input type="number" class="form-control glass-input" value="0">
+      </div>
+
+      <!-- Description -->
+      <div class="col-12">
+        <label class="form-label">Description</label>
+        <textarea class="form-control glass-input" rows="4" placeholder="Banner description"></textarea>
+      </div>
+
+      <!-- Image Upload -->
+      <div class="col-md-6">
+        <label class="form-label">Banner Image</label>
+        <div class="file-upload">
+          <input type="file" id="bannerImage">
+          <label for="bannerImage">
+            <i class="bi bi-upload"></i> Upload Image
+          </label>
+        </div>
+      </div>
+
+      <!-- ALT -->
+      <div class="col-md-6">
+        <label class="form-label">ALT Text</label>
+        <input type="text" class="form-control glass-input" placeholder="Image alt text">
+      </div>
+
+      <!-- Status -->
+      <div class="col-md-6">
+        <label class="form-label d-block">Status</label>
+        <div class="status-toggle">
+          <button type="button" class="status-btn active">Active</button>
+          <button type="button" class="status-btn">Inactive</button>
+        </div>
+      </div>
+
+      <!-- Module -->
+      <div class="col-md-6">
+        <label class="form-label">Module</label>
+        <select class="form-select glass-input">
+          <option>Please Select</option>
+          <option>Home</option>
+          <option>Flights</option>
+          <option>Packages</option>
+        </select>
+      </div>
+
+      <!-- Buttons -->
+      <div class="col-12 text-center mt-4">
+        <button class="btn btn-success-soft me-2">Save</button>
+        <button type="reset" class="btn btn-danger-soft">Reset</button>
+      </div>
+
+    </form>
+
+  </div>
+</div>
+
+<script>
+gsap.from(".form-card", {
+  opacity: 0,
+  y: 40,
+  duration: 0.8,
+  ease: "power3.out"
+});
+
+gsap.from(".glass-input, .file-upload, .status-toggle", {
+  opacity: 0,
+  y: 20,
+  stagger: 0.08,
+  duration: 0.6,
+  delay: 0.3
+});
+
+</script>
+</body>
+</html>
