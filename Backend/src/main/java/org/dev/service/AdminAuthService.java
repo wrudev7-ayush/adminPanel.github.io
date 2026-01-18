@@ -1,10 +1,9 @@
 package org.dev.service;
 
-import java.security.SecureRandom;
 
 import org.dev.config.JwtUtil;
 import org.dev.model.AdminUsers;
-import org.dev.repository.UserRepository;
+import org.dev.repository.AdminUserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,24 +11,25 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class AdminAuthService {
 
-	private final UserRepository repo;
+	private final AdminUserRepository repo;
 	private final PasswordEncoder encoder;
 	private final JwtUtil jwtUtil;
 	private final OtpService otpService;
 
-	public AdminAuthService(UserRepository repo, PasswordEncoder encoder, OtpService otpService, JwtUtil jwtUtil) {
+	public AdminAuthService(AdminUserRepository repo, PasswordEncoder encoder, OtpService otpService, JwtUtil jwtUtil) {
 		this.repo = repo;
 		this.otpService = otpService;
 		this.encoder = encoder;
 		this.jwtUtil = jwtUtil;
 	}
 
-	
-	  @Transactional public void updatePassword(String password) { AdminUsers admin
-	 = repo.findById(1L).orElseThrow(() -> new
-	RuntimeException("Admin not found"));
-	 admin.setPassword(encoder.encode(password)); repo.save(admin); }
-	 
+	@Transactional
+	public void updatePassword(String password) {
+		AdminUsers admin = repo.findById(1L).orElseThrow(() -> new RuntimeException("Admin not found"));
+		admin.setPassword(encoder.encode(password));
+		repo.save(admin);
+	}
+
 	@Transactional
 	public void login(String email, String password) {
 		AdminUsers admin = repo.findByEmail(email).orElseThrow(() -> new RuntimeException("Invalid email or password"));
@@ -57,6 +57,5 @@ public class AdminAuthService {
 
 		return jwtUtil.generateAdminToken(email);
 	}
-
 
 }

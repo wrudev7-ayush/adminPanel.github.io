@@ -3,12 +3,26 @@ package org.dev.exception;
 import org.dev.dto.ApiErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.dao.DataAccessException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+	
+		@ExceptionHandler(DataAccessException.class)
+	    public ResponseEntity<ApiErrorResponse> handleDatabaseError(
+	            DataAccessException ex) {
+
+	        return ResponseEntity
+	                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body(new ApiErrorResponse(
+	                        500,
+	                        "Database temporarily unavailable. Please try again.",
+	                        ex.getMessage()
+	                ));
+	    }
 
     /**
      * Handles all RuntimeExceptions thrown from services
@@ -64,4 +78,6 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+    
+   
 }
